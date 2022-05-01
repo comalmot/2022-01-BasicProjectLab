@@ -12,7 +12,7 @@
 
 ## 파일 구분
 
-### lib
+### `/lib`
  - `main.dart` ; UI/UX 메인 화면
  - `login.dart` ; 로그인 화면
  - `register.dart` ; 회원가입 화면
