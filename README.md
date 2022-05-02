@@ -13,7 +13,7 @@
 ## 파일 구분
 
 ### `/lib`
- - `main.dart` ; UI/UX 메인 화면
- - `login.dart` ; 로그인 화면
- - `register.dart` ; 회원가입 화면
+ - `main.dart` ; 로그인 화면
+ - `boong_main.dart` ; 사장님 메인 화면
+ - `boong_register.dart` ; 사장님 회원가입 화면
  - `customer_main.dart` ; 손님 메인 화면
