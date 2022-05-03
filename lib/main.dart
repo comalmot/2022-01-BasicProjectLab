@@ -1,117 +1,107 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MaterialApp(
+    home: MyEditText(),
+  ));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  // This widget is the root of your application.
+class MyEditText extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: '우리동네 붕세권'),
-    );
-  }
+  MyEditTextState createState() => MyEditTextState();
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-  final String title;
+class MyEditTextState extends State<MyEditText> {
 
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
+  final TextEditingController controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text("로그인"),
+        backgroundColor: Colors.black26,
       ),
       body: Container(
-        child: Column(
-          children: <Widget>[
-            Column(
-              children: <Widget>[
-                Text(
-                  '시작하기',
-                  style: TextStyle(fontSize: 38.0, fontWeight: FontWeight.bold),
+        padding: const EdgeInsets.all(20.0),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Text('시작하기', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
+              Container(width: 100,
+                  child: Divider(color: Colors.black, thickness: 1.0)),
+              Row(children: [
+                Text('사장님 안녕하세요!',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20,),),
+              ],),
+              Container(margin: EdgeInsets.all(8.0),),
+              TextField(
+                decoration: InputDecoration(
+                    labelText: '아이디',
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                      borderSide: BorderSide(width: 1, color: Colors.black),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                      borderSide: BorderSide(width: 1, color: Colors.grey),
+                    ),
+                    hintText: "아이디"
                 ),
-                SizedBox(
-                  width: 150.0,
-                  height: 2.0,
-                  child: Container(
-                    color: Colors.black,
-                  ),
+              ),
+              Container(margin: EdgeInsets.all(8.0),),
+              TextField(
+                obscureText: true,
+                decoration: InputDecoration(
+                    labelText: '비밀번호',
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                      borderSide: BorderSide(width: 1, color: Colors.black),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                      borderSide: BorderSide(width: 1, color: Colors.grey),
+                    ),
+                    hintText: "비밀번호"),
+              ),
+              Container(margin: EdgeInsets.all(4.0),),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {},
+                    style: ButtonStyle(
+                        textStyle: MaterialStateProperty.all(
+                            TextStyle(fontSize: 20, color: Colors.white)),
+                        backgroundColor:
+                        MaterialStateProperty.all(Colors.black45)),
+                    child: Text("회원가입"),),
+                  Container(margin: EdgeInsets.all(8.0),),
+                  ElevatedButton(
+                    onPressed: () {},
+                    style: ButtonStyle(
+                        textStyle: MaterialStateProperty.all(
+                            TextStyle(fontSize: 20, color: Colors.white)),
+                        backgroundColor:
+                        MaterialStateProperty.all(Colors.grey)),
+                    child: Text("로그인"),)
+                ],
+              ),
+              Container(margin: EdgeInsets.all(2.0),),
+              Container(width: 100,
+                  child: Divider(color: Colors.black, thickness: 1.0)),
+              Text('손님이시라면?',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20,),),
+              Container(margin: EdgeInsets.all(2.0),),
+              OutlinedButton(
+                onPressed: () {},
+                style: OutlinedButton.styleFrom(
+                  side: BorderSide(width: 1.0, color: Colors.black),
                 ),
-              ],
-            ), // 시작하기 텍스트와 실선
-            SizedBox(
-              height: 36.0,
-            ),
-            Column(
-              children: <Widget>[
-                Text(
-                  '사장님이신가요?',
-                  style: TextStyle(
-                    fontSize: 28.0,
-                  ),
-                ),
-                SizedBox(
-                  height: 36.0,
-                ),
-                Container(
-                    alignment: Alignment.center,
-                    width: 400.0,
-                    height: 200.0,
-                    color: Colors.amberAccent,
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 36.0,
-                        ),
-                        Container(
-                            width: 350.0,
-                            child: Column(
-                              children: [
-                                TextField(
-                                  decoration: InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    labelText: '아이디',
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 18.0,
-                                ),
-                                TextField(
-                                  decoration: InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    labelText: '비밀번호',
-                                  ),
-                                  obscureText: true,
-                                ),
-                              ],
-                            ))
-                      ],
-                    ))
-              ],
-            ),
-          ],
+                child: Text("손님으로 시작하기", style: TextStyle(color: Colors.black, fontSize: 19), ),),
+            ],
+          ),
         ),
       ),
     );
