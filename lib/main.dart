@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
+import 'beforeStart.dart';
 
-void main() {
-  runApp(MaterialApp(
-    home: MyEditText(),
-  ));
+void main() => runApp(MyApp());
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: '로그인',
+      home: MyEditText(),
+    );
+  }
 }
 
 class MyEditText extends StatefulWidget {
@@ -79,7 +87,12 @@ class MyEditTextState extends State<MyEditText> {
                     child: Text("회원가입"),),
                   Container(margin: EdgeInsets.all(8.0),),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder:
+                                (BuildContext context) =>
+                                beforeStart()));},
                     style: ButtonStyle(
                         textStyle: MaterialStateProperty.all(
                             TextStyle(fontSize: 20, color: Colors.white)),
