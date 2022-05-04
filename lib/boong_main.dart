@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'main.dart';
+import 'boong_infoEdit.dart';
 
 void main() => runApp(MyApp());
 
@@ -9,17 +10,17 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: '환영합니다!',
-      home: beforeStart(),
+      home: boong_main(),
     );
   }
 }
 
-class beforeStart extends StatefulWidget {
+class boong_main extends StatefulWidget {
   @override
-  beforeStartState createState() => beforeStartState();
+  boong_mainState createState() => boong_mainState();
 }
 
-class beforeStartState extends State<beforeStart> {
+class boong_mainState extends State<boong_main> {
 
   final TextEditingController controller = TextEditingController();
   String name = "name";
@@ -80,7 +81,12 @@ class beforeStartState extends State<beforeStart> {
                   ),
                   child: Text("영업 시작")),
               Container(margin: EdgeInsets.all(15.0),),
-              ElevatedButton(onPressed: () {},
+              ElevatedButton(onPressed: () {Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder:
+                          (BuildContext context) =>
+                          infoEdit()));},
                   style: ButtonStyle(
                     textStyle: MaterialStateProperty.all(
                         TextStyle(fontSize: 40, color: Colors.white)),

@@ -92,7 +92,7 @@ class MyEditTextState extends State<MyEditText> {
                         MaterialPageRoute(
                             builder:
                                 (BuildContext context) =>
-                                beforeStart()));},
+                                    boong_main()));},
                     style: ButtonStyle(
                         textStyle: MaterialStateProperty.all(
                             TextStyle(fontSize: 20, color: Colors.white)),
