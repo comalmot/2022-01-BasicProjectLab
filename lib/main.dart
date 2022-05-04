@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'beforeStart.dart';
+import 'boong_main.dart';
 
 void main() => runApp(MyApp());
 
