@@ -15,5 +15,5 @@
 ### `/lib`
  - `main.dart` ; 로그인 화면
  - `boong_main.dart` ; 사장님 메인 화면
- - `boong_register.dart` ; 사장님 회원가입 화면
+ - `boong_join.dart` ; 사장님 회원가입 화면
  - `customer_main.dart` ; 손님 메인 화면
