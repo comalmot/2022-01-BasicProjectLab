@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:our_town_boongsaegwon/boong_join.dart';
 import 'boong_main.dart';
+import 'boong_join.dart';
 
 void main() => runApp(MyApp());
 
@@ -78,7 +80,12 @@ class MyEditTextState extends State<MyEditText> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder:
+                                (BuildContext context) =>
+                                makeProfile()));},
                     style: ButtonStyle(
                         textStyle: MaterialStateProperty.all(
                             TextStyle(fontSize: 20, color: Colors.white)),
