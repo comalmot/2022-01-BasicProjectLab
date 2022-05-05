@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
@@ -28,6 +29,7 @@ class makeProfileState extends State<makeProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset : false,
       appBar: AppBar(
         title: Text("회원가입"),
         backgroundColor: Colors.black26,
@@ -35,17 +37,16 @@ class makeProfileState extends State<makeProfile> {
       body: Form(
         key: formKey,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+            children: [
+              const SizedBox(height: 30.0,),
             Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
               child: Column(
                 children: [
                   const Text(
                     '아이디',
                     style: TextStyle(
-                      fontSize: 25.0,
+                      fontSize: 22.0,
                     ),
                   ),
                   TextFormField(
@@ -68,6 +69,7 @@ class makeProfileState extends State<makeProfile> {
                 ],
               ),
             ),
+            const SizedBox(height: 30.0,),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
               child: Column(
@@ -75,9 +77,11 @@ class makeProfileState extends State<makeProfile> {
                   const Text(
                     '비밀번호',
                     style: TextStyle(
-                      fontSize: 25.0,
+                      fontSize: 22.0,
                     ),
                   ),
+
+
                   TextFormField(
                     autovalidateMode: AutovalidateMode.always,
                     decoration: const InputDecoration(
@@ -98,23 +102,58 @@ class makeProfileState extends State<makeProfile> {
                       } return null;
                     },
                   ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child:Column(
+                children: [
+                  const Text(
+                    '비밀번호 확인',
+                    style: TextStyle(
+                      fontSize: 22.0,
+                    ),
+                  ),
+                  TextFormField(
+                    autovalidateMode: AutovalidateMode.always,
+                    decoration: const InputDecoration(
+                      hintText: '비밀번호를 다시 입력해 주세요.',
+                    ),
+                    onSaved: (value) {
+                      setState(() {
+                        _pwdCheck = value as String;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return '입력되지 않았습니다.';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 40.0,),
                   ElevatedButton(
                     onPressed: () {
                       if (formKey.currentState!.validate()) {
                         formKey.currentState!.save();
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(_id+'/'+_pwd)),
+                          SnackBar(content: Text(_id+'/'+_pwd+'/'+_pwdCheck)),
                         );
                       }
-                      },
+                    },
+                    style: ButtonStyle(
+                      textStyle: MaterialStateProperty.all(
+                          TextStyle(fontSize: 15, color: Colors.white)),
+                      backgroundColor:
+                      MaterialStateProperty.all(Colors.black45),
+                    ),
                     child: const Text('Submit'),
                   )
-
-
-
                 ],
               ),
             )
+
           ]
 
         ),
