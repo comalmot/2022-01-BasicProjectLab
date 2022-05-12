@@ -49,23 +49,7 @@ class makeProfileState extends State<makeProfile> {
                       fontSize: 22.0,
                     ),
                   ),
-                  TextFormField(
-                    autovalidateMode: AutovalidateMode.always,
-                    decoration: const InputDecoration(
-                      hintText: '아이디를 입력해 주세요.',
-                    ),
-                    onSaved: (value) {
-                      setState(() {
-                        _id = value as String;
-                      });
-                    },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return '입력되지 않았습니다.';
-                      }
-                      return null;
-                    },
-                  ),
+
                 ],
               ),
             ),

@@ -1,9 +1,8 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'boong_menu.dart';
 import 'dart:io';
-
 import 'boong_timeEdit.dart';
 
 void main() => runApp(MyApp());
@@ -27,11 +26,26 @@ class infoEdit extends StatefulWidget {
 class infoEditState extends State<infoEdit> {
   String name = "";
   List<String> entries = <String>["HelloWorld!"];
-  List<String> pictures = <String>['a.jpg','b.jpg','c.jpg','d.jpg']; // 임시 사진 업로드 체크용 사진. 이후 사진 수정 예정
   List<String> menu = <String>[""];
+  List<File> images = <File>[];
   int a =0;
 
+  void _setImage() async {
+    var picker = ImagePicker();
+    var image = await picker.pickImage(source: ImageSource.gallery);
+    var userImage;
+    if(image != null) {
+      setState(() {
+        userImage = File(image.path);
+        images.add(userImage);
+        a++;
+      });
+    }
+  }
+
   final TextEditingController controller = TextEditingController();
+
+
 
 
   @override
@@ -117,7 +131,12 @@ class infoEditState extends State<infoEdit> {
                   ElevatedButton(
                     onPressed: () {
                       setState(() {
-                        entries.add("Hello World!"); //ListView 사용 임시 확인용 코드. 수정 필요
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder:
+                                    (BuildContext context) =>
+                                    timeEdit())); //ListView 사용 임시 확인용 코드. 수정 필요
                       });
                     },
                     style: ButtonStyle(
@@ -137,11 +156,11 @@ class infoEditState extends State<infoEdit> {
                     child: Row(
                       children: [Flexible(child: ListView.builder(
                         shrinkWrap: true,
-                        itemCount: a,
+                        itemCount: images.length,
                         itemBuilder: (BuildContext context, int index) {
                           return Container(
                             color: Colors.black26,
-                            child: Center(child: Image(image: AssetImage('assets/images/${pictures[index]}'),), // 사진 업로드 체크용. 이후 갤러리 열어서 사진 넘기는 쪽으로 수정 예정
+                            child: Center(child: Image(image: FileImage(images[index]),), // 사진 업로드 체크용. 이후 갤러리 열어서 사진 넘기는 쪽으로 수정 예정
                             ),
                           );
                         },
@@ -152,11 +171,7 @@ class infoEditState extends State<infoEdit> {
                   ElevatedButton(
                     onPressed: () {
                       setState(() {
-                        if(a >= pictures.length) { //임시.
-                        }
-                        else {
-                          a++;
-                        }
+                        _setImage();
                       });
                     },
                     style: ButtonStyle(
@@ -181,7 +196,14 @@ class infoEditState extends State<infoEdit> {
                     }, separatorBuilder: (BuildContext context, int index) => const Divider(),
                   ),
                   ElevatedButton( // 이후 화면 구성 후 처리 예정
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder:
+                                  (BuildContext context) =>
+                                  boong_menu()));
+                    },
                     style: ButtonStyle(
                         textStyle: MaterialStateProperty.all(
                             TextStyle(fontSize: 20, color: Colors.white)),
