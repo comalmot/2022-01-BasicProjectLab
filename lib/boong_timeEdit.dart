@@ -42,9 +42,7 @@ class timeEditState extends State<timeEdit> {
            child: Column(
              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
-                  child: Text('영업 요일', style: TextStyle(fontSize: 20, fontWeight: FontWeight.normal,),),
-                ),
+                Text('영업 요일', style: TextStyle(fontSize: 20, fontWeight: FontWeight.normal,),),
                 TextFormField(
                   autovalidateMode: AutovalidateMode.always,
                   decoration: const InputDecoration(
