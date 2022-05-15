@@ -101,23 +101,26 @@ class timeEditState extends State<timeEdit> {
                   },
                 ),
                 const SizedBox(height: 40.0,),
-                ElevatedButton(
-                  onPressed: () {
-                    if (formKey.currentState!.validate()) {
-                      formKey.currentState!.save();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(_openDay+'/'+_openTime+'/'+_location)),
-                      );
-                    }
-                  },
-                  style: ButtonStyle(
-                    textStyle: MaterialStateProperty.all(
-                        TextStyle(fontSize: 15, color: Colors.white)),
-                    backgroundColor:
-                    MaterialStateProperty.all(Colors.black45),
-                  ),
-                  child: const Text('완료'),
-                )
+                Container(
+                  width: 1000,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      OutlinedButton(
+                        onPressed: () {
+                          if (formKey.currentState!.validate()) {
+                            formKey.currentState!.save();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(_openDay+'/'+_openTime+'/'+_location)),
+                            );
+                          }
+                        },
+                        style: OutlinedButton.styleFrom(side: BorderSide(width: 1.0, color: Colors.black),),
+                        child: const Text('완료', style: TextStyle(color: Colors.black, fontSize: 19), ),
+                      )
+                    ],
+                  )
+                ),
 
               ],
            )
