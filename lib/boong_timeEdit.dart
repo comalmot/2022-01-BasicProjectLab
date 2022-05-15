@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'boong_infoEdit.dart';
 
@@ -14,109 +15,117 @@ class MyApp extends StatelessWidget {
   }
 }
 
+
 class timeEdit extends StatefulWidget {
   @override
   timeEditState createState() => timeEditState();
 }
 
 class timeEditState extends State<timeEdit> {
-    Map<String, bool> numbers = {
-      'One' : false,
-      'Two' : false,
-      'Three' : false,
-      'Four' : false,
-      'Five' : false,
-      'Six' : false,
-      'Seven' : false,
-    };
 
-    var holder_1 = [];
-
-    getItems() {
-      numbers.forEach((key, value) {
-        if (value == true) {
-          holder_1.add(key);
-        }
-      });
-      print(holder_1);
-      // Here you will get all your selected Checkbox items.
-
-      // Clear array after use.
-      holder_1.clear();
-    }
+  final formKey = GlobalKey<FormState>();
+  String _openTime = '';
+  String _openDay = '';
+  String _location = '';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.black26,
+          title: Text('영업 일시/장소 수정'),
         ),
-      body: Container(
-        padding: const EdgeInsets.all(20.0),
+      body: Form(
+        key: formKey,
         child: SingleChildScrollView(
+            padding: const EdgeInsets.all(20.0),
            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget> [
-                const Text('영업 일시/장소 수정', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
-                Container(width: 100, child: const Divider(color: Colors.black, thickness: 1.0)),
-
-                const Text('무슨 요일에', style: TextStyle(fontSize: 20, fontWeight: FontWeight.normal),),
-              //왜 안뜨는거야;;;;;;
-                ListView(
-                  children: numbers.keys.map((String key) {
-                    return new CheckboxListTile(
-                      title: new Text(key),
-                      value: numbers[key],
-                      activeColor: Colors.pink,
-                      checkColor: Colors.white,
-                      onChanged: (bool? value) {
-                          setState(() {
-                            numbers[key] = value!;
-                          });
-                        },
-                      );
-                    }).toList(),
+             crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
+                  child: Text('영업 요일', style: TextStyle(fontSize: 20, fontWeight: FontWeight.normal,),),
+                ),
+                TextFormField(
+                  autovalidateMode: AutovalidateMode.always,
+                  decoration: const InputDecoration(
+                    hintText: 'ex) 매월 첫째, 셋째주 월, 화요일 ',
                   ),
-                // CheckboxListTile(
-                //   title: Text('월'),
-                //   value: _isChecked1,
-                //   onChanged: (value) {
-                //     setState(() {
-                //       _isChecked1 = value!;
-                //     });
-                //   },
-                // ),
-                // CheckboxListTile(
-                //   title: Text('화'),
-                //   value: _isChecked2,
-                //   onChanged: (value) {
-                //     setState(() {
-                //       _isChecked2 = value!;
-                //     });
-                //   },
-                // ),
-                // Row(
-                //   children: <Widget> [
-                //
-                //     // Text('월', style: TextStyle(fontSize: 15, fontWeight: FontWeight.normal),),
-                //     // Checkbox(value: _isChecked1, onChanged: (value){
-                //     //   setState(() {
-                //     //     _isChecked1 = value!;
-                //     //   });
-                //     // },),
-                //     // Checkbox(value: _isChecked2, onChanged: (value){
-                //     //   setState(() {
-                //     //     _isChecked2 = value!;
-                //     //   });
-                //     // },),
-                //   ],
-                // ),
-              ],
+                  onSaved: (value) {
+                    setState(() {
+                      _openDay = value as String;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return '입력되지 않았습니다.';
+                    } return null;
+                  },
+                ),
 
+
+
+                SizedBox(height: 20,),
+
+                const Text('영업 시간', style: TextStyle(fontSize: 20, fontWeight: FontWeight.normal,)),
+                TextFormField(
+                  autovalidateMode: AutovalidateMode.always,
+                  decoration: const InputDecoration(
+                    hintText: 'ex) 오후 6시부터 오후 10시까지',
+                  ),
+                  onSaved: (value) {
+                    setState(() {
+                      _openTime = value as String;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return '입력되지 않았습니다.';
+                    } return null;
+                  },
+                ),
+                SizedBox(height: 20,),
+
+                const Text('영업 장소', style: TextStyle(fontSize: 20, fontWeight: FontWeight.normal,)),
+                TextFormField(
+                  autovalidateMode: AutovalidateMode.always,
+                  decoration: const InputDecoration(
+                    hintText: 'ex) 대전 궁동 충남대 후문 앞',
+                  ),
+                  onSaved: (value) {
+                    setState(() {
+                      _location = value as String;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return '입력되지 않았습니다.';
+                    } return null;
+                  },
+                ),
+                const SizedBox(height: 40.0,),
+                ElevatedButton(
+                  onPressed: () {
+                    if (formKey.currentState!.validate()) {
+                      formKey.currentState!.save();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(_openDay+'/'+_openTime+'/'+_location)),
+                      );
+                    }
+                  },
+                  style: ButtonStyle(
+                    textStyle: MaterialStateProperty.all(
+                        TextStyle(fontSize: 15, color: Colors.white)),
+                    backgroundColor:
+                    MaterialStateProperty.all(Colors.black45),
+                  ),
+                  child: const Text('완료'),
+                )
+
+              ],
            )
+        )
         ),
 
-      ),
-    );
+      );
   }
 }
