@@ -43,19 +43,22 @@ class makeProfileState extends State<makeProfile> {
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    '아이디',
-                    style: TextStyle(
-                      fontSize: 22.0,
-                    ),
-                  ),
+                  Container(child: Column(
+                    children: [const Text(
+                      '아이디',
+                      style: TextStyle(
+                        fontSize: 22.0,
+                      ),
+                    ),],
+                  )),
                   TextFormField(
                     autovalidateMode: AutovalidateMode.always,
                     decoration: const InputDecoration(
                       hintText: '아이디를 입력해 주세요.',
                     ),
-                    onSaved: (value) {
+                    onChanged: (value) {
                       setState(() {
                         _id = value as String;
                       });
@@ -74,6 +77,7 @@ class makeProfileState extends State<makeProfile> {
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
                     '비밀번호',
@@ -90,7 +94,7 @@ class makeProfileState extends State<makeProfile> {
                     decoration: const InputDecoration(
                       hintText: '비밀번호를 입력해 주세요.',
                     ),
-                    onSaved: (value) {
+                    onChanged: (value) {
                       setState(() {
                         _pwd = value as String;
                       });
@@ -104,6 +108,7 @@ class makeProfileState extends State<makeProfile> {
                         return '숫자를 포함한 8자리 이상의 문자열로 만들어 주세요.';
                       } return null;
                     },
+                    obscureText: true,
                   ),
                 ],
               ),
@@ -111,6 +116,7 @@ class makeProfileState extends State<makeProfile> {
             Padding(
               padding: const EdgeInsets.all(20),
               child:Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
                     '비밀번호 확인',
@@ -124,7 +130,7 @@ class makeProfileState extends State<makeProfile> {
                     decoration: const InputDecoration(
                       hintText: '비밀번호를 다시 입력해 주세요.',
                     ),
-                    onSaved: (value) {
+                    onChanged: (value) {
                       setState(() {
                         _pwdCheck = value as String;
                       });
@@ -133,34 +139,39 @@ class makeProfileState extends State<makeProfile> {
                       if (value == null || value.isEmpty) {
                         return '입력되지 않았습니다.';
                       }
+                      if(value.toString() != _pwd) {
+                        return '비밀번호가 일치하지 않습니다.';
+                      }
                       return null;
                     },
+                    obscureText: true,
                   ),
                   const SizedBox(height: 40.0,),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (formKey.currentState!.validate()) {
-                        formKey.currentState!.save();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(_id+'/'+_pwd+'/'+_pwdCheck)),
-                        );
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (BuildContext context) => info()));
-                      }
-                    },
-                    style: ButtonStyle(
-                      textStyle: MaterialStateProperty.all(
-                          TextStyle(fontSize: 15, color: Colors.white)),
-                      backgroundColor:
-                      MaterialStateProperty.all(Colors.black45),
-                    ),
-                    child: const Text('완료'),
-                  )
+
                 ],
               ),
-            )
+            ),
+              ElevatedButton(
+                onPressed: () {
+                  if (formKey.currentState!.validate()) {
+                    formKey.currentState!.save();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(_id+'/'+_pwd+'/'+_pwdCheck)),
+                    );
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) => info()));
+                  }
+                },
+                style: ButtonStyle(
+                  textStyle: MaterialStateProperty.all(
+                      TextStyle(fontSize: 15, color: Colors.white)),
+                  backgroundColor:
+                  MaterialStateProperty.all(Colors.black45),
+                ),
+                child: const Text('완료'),
+              )
 
           ]
 
