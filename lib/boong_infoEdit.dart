@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'boong_menu.dart';
+import 'boong_menuEdit.dart';
 import 'dart:io';
 import 'boong_timeEdit.dart';
 
@@ -26,7 +26,7 @@ class infoEdit extends StatefulWidget {
 class infoEditState extends State<infoEdit> {
   String name = "";
   List<String> entries = <String>["HelloWorld!"];
-  List<String> menu = <String>[""];
+  List<String> menus = <String>[""];
   List<File> images = <File>[];
   int a =0;
 
@@ -52,7 +52,8 @@ class infoEditState extends State<infoEdit> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("어서오세요!"),
+        automaticallyImplyLeading: false,
+        title: Text("가게 정보 수정"),
         backgroundColor: Colors.black26,
       ),
       body: Container(
@@ -65,16 +66,6 @@ class infoEditState extends State<infoEdit> {
                 style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
               Container(width: 100,
                 child: Divider(color: Colors.black, thickness: 2.0),),
-              Text("이름(10자 이하)",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
-              Container(margin: EdgeInsets.all(10.0), child: TextField(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(6.0)),
-                  ),
-                ),
-              ),
-              ),
               Text("점포명",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
               Container(margin: EdgeInsets.all(10.0), child: TextField(
@@ -85,16 +76,39 @@ class infoEditState extends State<infoEdit> {
                 ),
               ),
               ),
-              Text("카테고리 설정",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
-              Container(margin: EdgeInsets.all(10.0), child: TextField(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(6.0)),
-                  ),
+              Text("가게 사진 (" +'$a' +"/99)",
+                style: TextStyle(
+                    fontSize: 20, fontWeight: FontWeight.bold),),
+
+              Container(
+                padding: EdgeInsets.fromLTRB(100, 0, 100, 0),
+                child: Row(
+                  children: [Flexible(child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: images.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Container(
+                        color: Colors.grey,
+                        child: Center(child: Image(image: FileImage(images[index]),), // 사진 업로드 체크용. 이후 갤러리 열어서 사진 넘기는 쪽으로 수정 예정
+                        ),
+                      );
+                    },
+                  ),)],
                 ),
               ),
-              ),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    _setImage();
+                  });
+                },
+                style: ButtonStyle(
+                    textStyle: MaterialStateProperty.all(
+                        TextStyle(fontSize: 20, color: Colors.white)),
+                    backgroundColor:
+                    MaterialStateProperty.all(Colors.grey)),
+                child: Text("+"),),
+
               Container(child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
@@ -147,51 +161,17 @@ class infoEditState extends State<infoEdit> {
                     child: Text("+"),),
                   Container(margin: EdgeInsets.all(8.0),),
 
-                  Text("가게 사진 (" +'$a' +"/99)",
-                    style: TextStyle(
-                        fontSize: 20, fontWeight: FontWeight.bold),),
-
-                  Container(
-                    padding: EdgeInsets.fromLTRB(100, 0, 100, 0),
-                    child: Row(
-                      children: [Flexible(child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: images.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Container(
-                            color: Colors.black26,
-                            child: Center(child: Image(image: FileImage(images[index]),), // 사진 업로드 체크용. 이후 갤러리 열어서 사진 넘기는 쪽으로 수정 예정
-                            ),
-                          );
-                        },
-                      ),)],
-                    ),
-                  ),
-
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        _setImage();
-                      });
-                    },
-                    style: ButtonStyle(
-                        textStyle: MaterialStateProperty.all(
-                            TextStyle(fontSize: 20, color: Colors.white)),
-                        backgroundColor:
-                        MaterialStateProperty.all(Colors.grey)),
-                    child: Text("+"),),
-
                   Text("메뉴명/가격",
                     style: TextStyle(
                         fontSize: 20, fontWeight: FontWeight.bold),),
                   ListView.separated(
                     shrinkWrap: true,
-                    itemCount: menu.length,
+                    itemCount: menus.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Container(
                           height : 50,
                           color: Colors.black26,
-                          child: Center(child: Text('${menu[index]}'),)
+                          child: Center(child: Text('${menus[index]}'),)
                       );
                     }, separatorBuilder: (BuildContext context, int index) => const Divider(),
                   ),
@@ -202,7 +182,7 @@ class infoEditState extends State<infoEdit> {
                           MaterialPageRoute(
                               builder:
                                   (BuildContext context) =>
-                                  boong_menu()));
+                                  menuEdit()));
                     },
                     style: ButtonStyle(
                         textStyle: MaterialStateProperty.all(
@@ -221,7 +201,7 @@ class infoEditState extends State<infoEdit> {
                 color: Colors.black26,
                 child : Center(
                   child: ElevatedButton( //미입력된 부분 존재시 넘어가지 못하게 하는 부분 처리 x
-                    onPressed: () {},
+                    onPressed: () {Navigator.pop(context);},
                     style: ButtonStyle(
                         textStyle: MaterialStateProperty.all(
                             TextStyle(fontSize: 20, color: Colors.white)),

@@ -55,28 +55,30 @@ class boong_closeState extends State<boong_close> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("영업 중..."),
-        backgroundColor: Colors.black26,
-      ),
-      body: Container(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          children: <Widget>[
-            const SizedBox(height: 50.0,),
-            Container(margin: EdgeInsets.all(8.0),),
-            ElevatedButton(onPressed:isTrue == true ? () => _closing(context) : null,
-                style: ButtonStyle(
-                  textStyle: MaterialStateProperty.all(
-                      TextStyle(fontSize: 40, color: Colors.white)),
-                  backgroundColor:
-                  MaterialStateProperty.all(Colors.black45),
-                ),
-                child: Text("영업종료")),
-          ],
+    return WillPopScope(
+        child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: Text("영업 중..."),
+          backgroundColor: Colors.black26,
         ),
-      )
-    );
+        body: Container(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            children: <Widget>[
+              const SizedBox(height: 50.0,),
+              Container(margin: EdgeInsets.all(8.0),),
+              ElevatedButton(onPressed:isTrue == true ? () => _closing(context) : null,
+                  style: ButtonStyle(
+                    textStyle: MaterialStateProperty.all(
+                        TextStyle(fontSize: 40, color: Colors.white)),
+                    backgroundColor:
+                    MaterialStateProperty.all(Colors.black45),
+                  ),
+                  child: Text("영업종료")),
+            ],
+          ),
+        )
+    ), onWillPop: () async => false);
   }
 }

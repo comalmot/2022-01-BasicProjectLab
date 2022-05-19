@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:our_town_boongsaegwon/boong_join.dart';
 import 'boong_main.dart';
 import 'boong_join.dart';
@@ -25,9 +26,31 @@ class MyEditText extends StatefulWidget {
 class MyEditTextState extends State<MyEditText> {
   final TextEditingController controller = TextEditingController();
 
+  Future<bool> _onBackPressed() async {
+    return await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("끝내시겠습니까?"),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    SystemNavigator.pop();
+                  },
+                  child: Text("네")),
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context, false);
+                  },
+                  child: Text("아니오")),
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WillPopScope(child: Scaffold(
       appBar: AppBar(
         title: Text("로그인"),
         backgroundColor: Colors.black26,
@@ -107,7 +130,7 @@ class MyEditTextState extends State<MyEditText> {
                         textStyle: MaterialStateProperty.all(
                             TextStyle(fontSize: 20, color: Colors.white)),
                         backgroundColor:
-                            MaterialStateProperty.all(Colors.black45)),
+                        MaterialStateProperty.all(Colors.black45)),
                     child: Text("회원가입"),
                   ),
                   Container(
@@ -124,7 +147,7 @@ class MyEditTextState extends State<MyEditText> {
                         textStyle: MaterialStateProperty.all(
                             TextStyle(fontSize: 20, color: Colors.white)),
                         backgroundColor:
-                            MaterialStateProperty.all(Colors.grey)),
+                        MaterialStateProperty.all(Colors.grey)),
                     child: Text("로그인"),
                   )
                 ],
@@ -164,6 +187,8 @@ class MyEditTextState extends State<MyEditText> {
           ),
         ),
       ),
-    );
+    ), onWillPop: () {
+      return _onBackPressed();
+    });
   }
 }

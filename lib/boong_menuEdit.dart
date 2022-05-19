@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'boong_info.dart';
+import 'boong_infoEdit.dart';
 import 'dart:io';
 
 void main() => runApp(MyApp());
@@ -12,17 +12,17 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: '메뉴 추가',
-      home: menu(),
+      title: '메뉴 수정',
+      home: menuEdit(),
     );
   }
 }
 
-class menu extends StatefulWidget {
-  menuState createState() => menuState();
+class menuEdit extends StatefulWidget {
+  menuEditState createState() => menuEditState();
 }
 
-class menuState extends State<menu> {
+class menuEditState extends State<menuEdit> {
   List<File> images = <File>[];
 
   void _setImage() async {
@@ -41,7 +41,7 @@ class menuState extends State<menu> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("메뉴 추가"),
+          title: Text("메뉴 수정"),
           backgroundColor: Colors.black26,
         ),
         body: Container(
@@ -53,7 +53,7 @@ class menuState extends State<menu> {
                     alignment: Alignment(-1.0, 0.0),
                     child:Column(
                       children: [
-                        const Text('메뉴 추가', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
+                        const Text('메뉴 수정', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
 
                       ],
                     )

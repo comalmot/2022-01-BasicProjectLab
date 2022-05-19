@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import'boong_info.dart';
 
 void main() => runApp(MyApp());
 
@@ -143,6 +144,10 @@ class makeProfileState extends State<makeProfile> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text(_id+'/'+_pwd+'/'+_pwdCheck)),
                         );
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (BuildContext context) => info()));
                       }
                     },
                     style: ButtonStyle(

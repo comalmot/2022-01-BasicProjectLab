@@ -113,6 +113,7 @@ class timeEditState extends State<timeEdit> {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text(_openDay+'/'+_openTime+'/'+_location)),
                             );
+                            Navigator.pop(context);
                           }
                         },
                         style: OutlinedButton.styleFrom(side: BorderSide(width: 1.0, color: Colors.black),),
