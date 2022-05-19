@@ -84,6 +84,8 @@ class makeProfileState extends State<makeProfile> {
 
                   TextFormField(
                     autovalidateMode: AutovalidateMode.always,
+                    keyboardType: TextInputType.visiblePassword,
+                    // obscureText: true,
                     decoration: const InputDecoration(
                       hintText: '비밀번호를 입력해 주세요.',
                     ),
@@ -117,6 +119,7 @@ class makeProfileState extends State<makeProfile> {
                   ),
                   TextFormField(
                     autovalidateMode: AutovalidateMode.always,
+                    // obscureText: true,
                     decoration: const InputDecoration(
                       hintText: '비밀번호를 다시 입력해 주세요.',
                     ),
