@@ -111,10 +111,7 @@ class timeEditState extends State<timeEdit> {
                         onPressed: () {
                           if (formKey.currentState!.validate()) {
                             formKey.currentState!.save();
-                            // ScaffoldMessenger.of(context).showSnackBar(
-                            //   SnackBar(content: Text(_openDay+'/'+_openTime+'/'+_location)),
-                            // );
-                            // returnData.add(_openTime);
+
                             returnData.add(_openDay+" "+_openTime+" "+_location);
 
                             Navigator.pop(context, returnData);

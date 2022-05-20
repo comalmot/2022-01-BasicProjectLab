@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:our_town_boongsaegwon/boong_main.dart';
+import 'package:our_town_boongsaegwon/boong_timeEdit.dart';
 import 'boong_menu.dart';
 import 'dart:io';
 import'main.dart';

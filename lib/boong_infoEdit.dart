@@ -26,8 +26,8 @@ class infoEdit extends StatefulWidget {
 class infoEditState extends State<infoEdit> {
   String name = "";
   static List<String> entries = <String>[];
-  static List<String> menus = <String>[""];
-  static List<File> images = <File>[];
+  List<String> menus = <String>[];
+  List<File> images = <File>[];
   int a =0;
 
 
@@ -158,18 +158,15 @@ class infoEditState extends State<infoEdit> {
 
                         print("modified: $returnData");
                         print("modified: $entries");
+                        // 화면 새로고침
+                        Navigator. pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (context) => infoEdit()),
+                              (Route<dynamic> route) => false,
+                        );
                       }
                     },
-                    // {
-                    //   setState(() {
-                    //     Navigator.push(
-                    //         context,
-                    //         MaterialPageRoute(
-                    //             builder:
-                    //                 (BuildContext context) =>
-                    //                 timeEdit())); //ListView 사용 임시 확인용 코드. 수정 필요
-                    //   });
-                    // },
+
                     style: ButtonStyle(
                         textStyle: MaterialStateProperty.all(
                             TextStyle(fontSize: 20, color: Colors.white)),
@@ -178,7 +175,7 @@ class infoEditState extends State<infoEdit> {
                     child: Text("+"),),
                   Container(margin: EdgeInsets.all(8.0),),
 
-                  Text("메뉴명/가격",
+                  const Text("메뉴명/가격",
                     style: TextStyle(
                         fontSize: 20, fontWeight: FontWeight.bold),),
                   ListView.separated(
@@ -188,7 +185,7 @@ class infoEditState extends State<infoEdit> {
                       return Container(
                           height : 50,
                           color: Colors.black26,
-                          child: Center(child: Text('${menus[index]}'),)
+                          child: Center(child: Text(menus[index]),)
                       );
                     }, separatorBuilder: (BuildContext context, int index) => const Divider(),
                   ),
