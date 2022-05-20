@@ -25,10 +25,11 @@ class infoEdit extends StatefulWidget {
 
 class infoEditState extends State<infoEdit> {
   String name = "";
-  List<String> entries = <String>["HelloWorld!"];
-  List<String> menus = <String>[""];
-  List<File> images = <File>[];
+  static List<String> entries = <String>[];
+  static List<String> menus = <String>[""];
+  static List<File> images = <File>[];
   int a =0;
+
 
   void _setImage() async {
     var picker = ImagePicker();
@@ -132,27 +133,43 @@ class infoEditState extends State<infoEdit> {
                     style: TextStyle(
                         fontSize: 20, fontWeight: FontWeight.bold),),
                   ListView.separated(
+
                     shrinkWrap: true,
                     itemCount: entries.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Container(
                           height : 50,
                           color: Colors.black26,
-                          child: Center(child: Text('${entries[index]}'),)
+                          child: Center(child: Text(entries[index]),)
                       );
                     }, separatorBuilder: (BuildContext context, int index) => const Divider(),
                   ),
                   ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder:
-                                    (BuildContext context) =>
-                                    timeEdit())); //ListView 사용 임시 확인용 코드. 수정 필요
-                      });
+                    onPressed: () async {
+                      final returnData = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => timeEdit()
+                        )
+                      );
+                      if( returnData != null ){
+                        int i = timeEditState.returnData.length;
+                        entries.add(timeEditState.returnData[i-1]);
+
+                        print("modified: $returnData");
+                        print("modified: $entries");
+                      }
                     },
+                    // {
+                    //   setState(() {
+                    //     Navigator.push(
+                    //         context,
+                    //         MaterialPageRoute(
+                    //             builder:
+                    //                 (BuildContext context) =>
+                    //                 timeEdit())); //ListView 사용 임시 확인용 코드. 수정 필요
+                    //   });
+                    // },
                     style: ButtonStyle(
                         textStyle: MaterialStateProperty.all(
                             TextStyle(fontSize: 20, color: Colors.white)),

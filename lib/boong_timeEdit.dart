@@ -27,6 +27,7 @@ class timeEditState extends State<timeEdit> {
   String _openTime = '';
   String _openDay = '';
   String _location = '';
+  static List<dynamic> returnData = [];
 
   @override
   Widget build(BuildContext context) {
@@ -110,10 +111,13 @@ class timeEditState extends State<timeEdit> {
                         onPressed: () {
                           if (formKey.currentState!.validate()) {
                             formKey.currentState!.save();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(_openDay+'/'+_openTime+'/'+_location)),
-                            );
-                            Navigator.pop(context);
+                            // ScaffoldMessenger.of(context).showSnackBar(
+                            //   SnackBar(content: Text(_openDay+'/'+_openTime+'/'+_location)),
+                            // );
+                            // returnData.add(_openTime);
+                            returnData.add(_openDay+" "+_openTime+" "+_location);
+
+                            Navigator.pop(context, returnData);
                           }
                         },
                         style: OutlinedButton.styleFrom(side: BorderSide(width: 1.0, color: Colors.black),),
