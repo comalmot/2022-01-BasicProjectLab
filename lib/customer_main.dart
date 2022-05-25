@@ -51,13 +51,14 @@ class customer_mainState extends State<customer_main> {
     ),
   ];
 
-  void _getNowLocation() {
+  void _getNowLocation() async {
     LocationPermission permission = await Geolocator.requestPermission();
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
     if (position != null) {
       controller!.runJavascript(
-          'setMarker(${position.latitude},${position.longitude})');
+          //'setMarker(${position.latitude},${position.longitude})'
+          'setinitMap()');
     }
   }
 
