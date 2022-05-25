@@ -51,7 +51,7 @@ class customer_mainState extends State<customer_main> {
     ),
   ];
 
-  void _getNowLocation() async {
+  void _getNowLocation() {
     LocationPermission permission = await Geolocator.requestPermission();
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
