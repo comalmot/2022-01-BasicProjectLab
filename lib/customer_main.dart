@@ -58,7 +58,7 @@ class customer_mainState extends State<customer_main> {
     if (position != null) {
       controller!.runJavascript(
           //'setMarker(${position.latitude},${position.longitude})'
-          'setinitMap()');
+          'setinitMap(${position.latitude},${position.longitude}');
     }
   }
 
