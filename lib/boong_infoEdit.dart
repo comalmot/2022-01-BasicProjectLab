@@ -26,7 +26,7 @@ class infoEdit extends StatefulWidget {
 class infoEditState extends State<infoEdit> {
   String name = "";
   static List<String> entries = <String>[];
-  List<String> menus = <String>[];
+  static List<String> menus = <String>[];
   List<File> images = <File>[];
   int a =0;
 
@@ -190,13 +190,25 @@ class infoEditState extends State<infoEdit> {
                     }, separatorBuilder: (BuildContext context, int index) => const Divider(),
                   ),
                   ElevatedButton( // 이후 화면 구성 후 처리 예정
-                    onPressed: () {
-                      Navigator.push(
+                    onPressed: () async {
+                      final returnData = await Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder:
-                                  (BuildContext context) =>
-                                  menuEdit()));
+                              builder: (context) => menuEdit()
+                          )
+                      );
+                      if( returnData != null ){
+                        int i = menuEditState.returnData.length;
+                        menus.add(menuEditState.returnData[i-1]);
+
+                        print("modified: $returnData");
+                        // 화면 새로고침
+                        Navigator. pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (context) => infoEdit()),
+                              (Route<dynamic> route) => false,
+                        );
+                      }
                     },
                     style: ButtonStyle(
                         textStyle: MaterialStateProperty.all(
