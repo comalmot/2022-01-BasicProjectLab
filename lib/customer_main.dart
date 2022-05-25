@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 import 'boong_infoEdit.dart';
 
 void main() => runApp(MyApp());
+
+class Markers {
+  double latitude = 0.0;
+  double longitude = 0.0;
+  bool is_open = false;
+  String id = "";
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -30,6 +38,7 @@ class customer_mainState extends State<customer_main> {
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
+  GlobalKey<ScaffoldState> _BottomdrawerKey = GlobalKey();
 
   static List<Widget> _widgetOptions = <Widget>[
     Text(
@@ -42,6 +51,16 @@ class customer_mainState extends State<customer_main> {
     ),
   ];
 
+  void _getNowLocation() async {
+    LocationPermission permission = await Geolocator.requestPermission();
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    if (position != null) {
+      controller!.runJavascript(
+          'setMarker(${position.latitude},${position.longitude})');
+    }
+  }
+
   void _onItemTapped(int index) {
     setState(() {
       index == 0
@@ -49,7 +68,150 @@ class customer_mainState extends State<customer_main> {
           : setState(() {
               _selectedIndex = index;
             });
+      index == 2
+          ? showMenu()
+          : setState(() {
+              _selectedIndex = index;
+            });
     });
+  }
+
+  showMenu() {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(16.0),
+                topRight: Radius.circular(16.0),
+              ),
+              color: Color(0xff232f34),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: <Widget>[
+                Container(
+                  height: 3,
+                ),
+                SizedBox(
+                    height: (56 * 6).toDouble(),
+                    child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(16.0),
+                            topRight: Radius.circular(16.0),
+                          ),
+                          color: Color(0xff344955),
+                        ),
+                        child: Stack(
+                          alignment: Alignment(0, 0),
+                          overflow: Overflow.visible,
+                          children: <Widget>[
+                            Positioned(
+                              top: -36,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(50)),
+                                    border: Border.all(
+                                        color: Color(0xff232f34), width: 10)),
+                                child: Center(
+                                  child: ClipOval(
+                                    child: Image.network(
+                                      "https://i.stack.imgur.com/S11YG.jpg?s=64&g=1",
+                                      fit: BoxFit.cover,
+                                      height: 36,
+                                      width: 36,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              child: ListView(
+                                physics: NeverScrollableScrollPhysics(),
+                                children: <Widget>[
+                                  ListTile(
+                                    title: Text(
+                                      "Inbox",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    leading: Icon(
+                                      Icons.inbox,
+                                      color: Colors.white,
+                                    ),
+                                    onTap: () {},
+                                  ),
+                                  ListTile(
+                                    title: Text(
+                                      "Starred",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    leading: Icon(
+                                      Icons.star_border,
+                                      color: Colors.white,
+                                    ),
+                                    onTap: () {},
+                                  ),
+                                  ListTile(
+                                    title: Text(
+                                      "Sent",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    leading: Icon(
+                                      Icons.send,
+                                      color: Colors.white,
+                                    ),
+                                    onTap: () {},
+                                  ),
+                                  ListTile(
+                                    title: Text(
+                                      "Trash",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    leading: Icon(
+                                      Icons.delete_outline,
+                                      color: Colors.white,
+                                    ),
+                                    onTap: () {},
+                                  ),
+                                  ListTile(
+                                    title: Text(
+                                      "Spam",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    leading: Icon(
+                                      Icons.error,
+                                      color: Colors.white,
+                                    ),
+                                    onTap: () {},
+                                  ),
+                                  ListTile(
+                                    title: Text(
+                                      "Drafts",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    leading: Icon(
+                                      Icons.mail_outline,
+                                      color: Colors.white,
+                                    ),
+                                    onTap: () {},
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ))),
+                Container(
+                  height: 56,
+                  color: Color(0xff4a6572),
+                )
+              ],
+            ),
+          );
+        });
   }
 
   @override
@@ -138,12 +300,15 @@ class customer_mainState extends State<customer_main> {
             child: Transform.scale(
           scale: ratio,
           child: WebView(
-            initialUrl: "http://boongsaegwon.kro.kr",
+            initialUrl: "http://boongsaegwon-test.kro.kr",
             onWebViewCreated: (controller) {
               this.controller = controller;
             },
             javascriptChannels: channel,
             javascriptMode: JavascriptMode.unrestricted,
+            onPageFinished: (String url) {
+              _getNowLocation();
+            },
           ),
         )),
       ),

@@ -30,6 +30,7 @@ dependencies:
   flutter:
     sdk: flutter
   http:
+  geolocator: 
   image_picker:
   webview_flutter: ^3.0.2
 
