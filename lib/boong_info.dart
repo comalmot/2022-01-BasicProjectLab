@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -8,6 +9,8 @@ import 'boong_menu.dart';
 import 'dart:io';
 import'main.dart';
 import 'boong_time.dart';
+import 'boong_timeEdit.dart';
+import 'boong_menuEdit.dart';
 
 void main() => runApp(MyApp());
 
@@ -29,8 +32,8 @@ class info extends StatefulWidget {
 
 class infoState extends State<info> {
   String name = "";
-  List<String> entries = <String>["HelloWorld!"];
-  List<String> menus = <String>[""];
+  static List<String> entries = <String>[];
+  static List<String> menus = <String>[];
   List<File> images = <File>[];
   int a = 0;
 
@@ -176,15 +179,28 @@ class infoState extends State<info> {
                 const Divider(),
               ),
               ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                                time())); //ListView 사용 임시 확인용 코드. 수정 필요
-                  });
+                onPressed: () async {
+                  final returnData = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => timeEdit()
+                      )
+                  );
+                  if( returnData != null ){
+                    int i = timeEditState.returnData.length;
+                    entries.add(timeEditState.returnData[i-1]);
+
+                    print("modified: $returnData");
+                    print("modified: $entries");
+                    // 화면 새로고침
+                    Navigator. pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => info()),
+                          (Route<dynamic> route) => false,
+                    );
+                  }
                 },
+
                 style: ButtonStyle(
                     textStyle: MaterialStateProperty.all(
                         TextStyle(fontSize: 20, color: Colors.white)),
@@ -261,22 +277,33 @@ class infoState extends State<info> {
                         separatorBuilder: (BuildContext context, int index) =>
                         const Divider(),
                       ),
-                      ElevatedButton(
-                        // 이후 화면 구성 후 처리 예정
-                        onPressed: () {
-                          Navigator.push(
+                      ElevatedButton( // 이후 화면 구성 후 처리 예정
+                        onPressed: () async {
+                          final returnData = await Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      menu()));
+                                  builder: (context) => menuEdit()
+                              )
+                          );
+                          if( returnData != null ){
+                            int i = menuEditState.returnData.length;
+                            menus.add(menuEditState.returnData[i-1]);
+
+                            print("modified: $returnData");
+                            // 화면 새로고침
+                            Navigator. pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(builder: (context) => info()),
+                                  (Route<dynamic> route) => false,
+                            );
+                          }
                         },
                         style: ButtonStyle(
                             textStyle: MaterialStateProperty.all(
                                 TextStyle(fontSize: 20, color: Colors.white)),
                             backgroundColor:
                             MaterialStateProperty.all(Colors.grey)),
-                        child: Text("+"),
-                      ),
+                        child: Text("+"),),
                     ],
                   )),
               Container(
