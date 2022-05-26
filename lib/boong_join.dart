@@ -1,6 +1,25 @@
+import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import'boong_info.dart';
+
+Future<register> fetchRegister(String id, String pwd) async {
+  final msg = jsonEncode({"id" : id, "password" : pwd});
+  final response = await http.post(Uri.parse('http://boongsaegwon.kro.kr/register'),
+      headers: <String, String> {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: msg);
+
+  if (response.statusCode == 200) {
+    // If the server did return a 200 OK response,
+    // then parse the JSON.
+    return register.fromJson(json.decode(response.body));
+  } else {
+    throw Exception('Failed to load album');
+  }
+}
 
 void main() => runApp(MyApp());
 
@@ -16,6 +35,25 @@ class MyApp extends StatelessWidget {
   }
 }
 
+class register {
+  Null? error;
+  bool? ok;
+
+  register({this.error, this.ok});
+
+  register.fromJson(Map<String, dynamic> json) {
+    error = json['error'];
+    ok = json['ok'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['error'] = this.error;
+    data['ok'] = this.ok;
+    return data;
+  }
+}
+
 class makeProfile extends StatefulWidget {
   @override
   makeProfileState createState() => makeProfileState();
@@ -26,6 +64,7 @@ class makeProfileState extends State<makeProfile> {
   String _id = '';
   String _pwd = '';
   String _pwdCheck = '';
+  late Future<register> futureAlbum;
 
   @override
   Widget build(BuildContext context) {
@@ -155,13 +194,29 @@ class makeProfileState extends State<makeProfile> {
                 onPressed: () {
                   if (formKey.currentState!.validate()) {
                     formKey.currentState!.save();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(_id+'/'+_pwd+'/'+_pwdCheck)),
+                    futureAlbum = fetchRegister(_id, _pwd);
+                    FutureBuilder<register>(
+                      future: futureAlbum,
+                      builder: (context, snapshot) {
+                        if(snapshot.hasData) {
+                          if(snapshot.data?.ok == true) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(_id+'/'+_pwd+'/'+_pwdCheck)),
+                            );
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) => info()));
+                          }
+                          else {
+                          }
+                        }
+                        else if (snapshot.hasError) {
+                        }
+                        return CircularProgressIndicator();
+                      },
                     );
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (BuildContext context) => info()));
+
                   }
                 },
                 style: ButtonStyle(

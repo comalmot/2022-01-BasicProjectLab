@@ -168,7 +168,7 @@ class menuEditState extends State<menuEdit> {
                       children: <Widget>[
                         OutlinedButton(
                           onPressed: () {
-                            if (formKey.currentState!.validate() ) {
+                            if (formKey.currentState!.validate()) {
                               formKey.currentState!.save();
 
                               returnData.add(_menu+"     "+_price);
