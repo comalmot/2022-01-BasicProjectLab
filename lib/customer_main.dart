@@ -30,7 +30,7 @@ class customer_main extends StatefulWidget {
 
 class customer_mainState extends State<customer_main> {
   String url = ""; // 띄울 웹 페이지의 주소
-  Set<JavascriptChannel>? channel;
+
   WebViewController? controller;
 
   // Bottom Navigation Bar 관련 변수
@@ -58,7 +58,7 @@ class customer_mainState extends State<customer_main> {
     if (position != null) {
       controller!.runJavascript(
           //'setMarker(${position.latitude},${position.longitude})'
-          'setinitMap(${position.latitude},${position.longitude})');
+          'setinitMap(${position.latitude},${position.longitude});getAllLocations();');
     }
   }
 
@@ -215,9 +215,22 @@ class customer_mainState extends State<customer_main> {
         });
   }
 
+  JavascriptChannel _markerClicked(BuildContext context) {
+    return JavascriptChannel(
+        name: 'taeHyeonTV',
+        onMessageReceived: (JavascriptMessage message) {
+          final _loginSnackBar = SnackBar(
+            content: Text(message.message),
+          );
+
+          ScaffoldMessenger.of(context).showSnackBar(_loginSnackBar);
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     double ratio = MediaQuery.of(context).devicePixelRatio;
+
     return Scaffold(
       key: _drawerKey,
       drawer: Drawer(
@@ -305,7 +318,9 @@ class customer_mainState extends State<customer_main> {
             onWebViewCreated: (controller) {
               this.controller = controller;
             },
-            javascriptChannels: channel,
+            javascriptChannels: <JavascriptChannel>{
+              _markerClicked(context),
+            },
             javascriptMode: JavascriptMode.unrestricted,
             onPageFinished: (String url) {
               _getNowLocation();
