@@ -2,41 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:our_town_boongsaegwon/boong_join.dart';
 import 'package:http/http.dart' as http;
+import 'package:webview_flutter/webview_flutter.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'boong_main.dart';
 import 'boong_join.dart';
 import 'customer_main.dart';
 
-Future<login> fetchLogin(String id, String pwd) async {
-  final msg = jsonEncode({"id": id, "password": pwd});
-  final response =
-      await http.post(Uri.parse('http://boongsaegwon.kro.kr/login'),
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-          },
-          body: msg);
-
-  if (response.statusCode == 200) {
-    // If the server did return a 200 OK response,
-    // then parse the JSON.
-    return login.fromJson(json.decode(response.body));
-  } else {
-    throw Exception('Failed to load album');
-  }
-}
-
 class login {
-  Null? error;
+  String? error;
   bool? ok;
   String? token;
 
   login({this.error, this.ok, this.token});
 
   login.fromJson(Map<String, dynamic> json) {
-    error = json['error'];
-    ok = json['ok'];
-    token = json['token'];
+    this.error = json['error'];
+    this.ok = json['ok'];
+    this.token = json['token'];
   }
 
   Map<String, dynamic> toJson() {
@@ -45,18 +28,6 @@ class login {
     data['ok'] = this.ok;
     data['token'] = this.token;
     return data;
-  }
-
-  Null? _getError() {
-    return this.error;
-  }
-
-  bool? _getOK() {
-    return this.ok;
-  }
-
-  String? _getToken() {
-    return this.token;
   }
 }
 
@@ -109,6 +80,42 @@ class MyEditTextState extends State<MyEditText> {
     final _pwTextController = TextEditingController();
     final _loginFormKey = GlobalKey<FormState>();
     late Future<login> _loginfutureAlbum;
+    GlobalKey<ScaffoldState> _loginSnackBar = GlobalKey();
+
+    Future<login> fetchLogin(String id, String pwd) async {
+      final msg = jsonEncode({"id": id, "password": pwd});
+      final response =
+          await http.post(Uri.parse('http://boongsaegwon.kro.kr/login'),
+              headers: <String, String>{
+                'Content-Type': 'application/json; charset=UTF-8',
+              },
+              body: msg);
+
+      if (response.statusCode == 200) {
+        // If the server did return a 200 OK response,
+        // then parse the JSON.
+
+        if (login.fromJson(json.decode(response.body)).ok == true) {
+          final _loginSnackBar = SnackBar(
+            content: Text("로그인 성공."),
+          );
+
+          ScaffoldMessenger.of(context).showSnackBar(_loginSnackBar);
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => boong_main()));
+        }
+        return login.fromJson(json.decode(response.body));
+      } else {
+        final _loginSnackBar = SnackBar(
+          content: Text("로그인 실패."),
+        );
+
+        ScaffoldMessenger.of(context).showSnackBar(_loginSnackBar);
+        throw Exception('Error : Failed to login');
+      }
+    }
 
     @override
     void dispose() {
@@ -233,32 +240,12 @@ class MyEditTextState extends State<MyEditText> {
                                 builder: (context, snapshot) {
                                   if (snapshot.hasData) {
                                     if (snapshot.data?.ok == true) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(content: Text("로그인 성공")),
-                                      );
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (BuildContext context) =>
-                                                  boong_main()));
-                                    } else {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(content: Text("로그인 실패")),
-                                      );
-                                    }
+                                    } else {}
                                   } else if (snapshot.hasError) {}
                                   return CircularProgressIndicator();
                                 },
                               );
                             }
-
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        boong_main()));
                           },
                           style: ButtonStyle(
                               textStyle: MaterialStateProperty.all(

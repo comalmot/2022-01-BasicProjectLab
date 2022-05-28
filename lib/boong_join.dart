@@ -3,24 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'boong_info.dart';
-
-Future<register> fetchRegister(String id, String pwd) async {
-  final msg = jsonEncode({"id": id, "password": pwd});
-  final response =
-      await http.post(Uri.parse('http://boongsaegwon.kro.kr/register'),
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-          },
-          body: msg);
-
-  if (response.statusCode == 200) {
-    // If the server did return a 200 OK response,
-    // then parse the JSON.
-    return register.fromJson(json.decode(response.body));
-  } else {
-    throw Exception('Failed to load album');
-  }
-}
+import 'main.dart';
 
 void main() => runApp(MyApp());
 
@@ -68,6 +51,41 @@ class makeProfileState extends State<makeProfile> {
 
   @override
   Widget build(BuildContext context) {
+    Future<register> fetchRegister(String id, String pwd) async {
+      final msg = jsonEncode({"id": id, "password": pwd});
+      final response =
+          await http.post(Uri.parse('http://boongsaegwon.kro.kr/register'),
+              headers: <String, String>{
+                'Content-Type': 'application/json; charset=UTF-8',
+              },
+              body: msg);
+
+      if (response.statusCode == 200) {
+        // If the server did return a 200 OK response,
+        // then parse the JSON.
+
+        if (register.fromJson(json.decode(response.body)).ok == true) {
+          final _registerSnackBar = SnackBar(
+            content: Text("회원가입 성공."),
+          );
+
+          ScaffoldMessenger.of(context).showSnackBar(_registerSnackBar);
+
+          Navigator.pop(context);
+        } else {
+          final _registerSnackBar = SnackBar(
+            content: Text("회원가입 실패."),
+          );
+
+          ScaffoldMessenger.of(context).showSnackBar(_registerSnackBar);
+        }
+
+        return register.fromJson(json.decode(response.body));
+      } else {
+        throw Exception('Failed to load album');
+      }
+    }
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
