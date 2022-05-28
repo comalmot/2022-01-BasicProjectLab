@@ -40,7 +40,6 @@ class customer_mainState extends State<customer_main> {
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
   GlobalKey<ScaffoldState> _BottomdrawerKey = GlobalKey();
-
   static List<Widget> _widgetOptions = <Widget>[
     Text(
       'Index 1: Business',
@@ -76,149 +75,57 @@ class customer_mainState extends State<customer_main> {
               _selectedIndex = index;
             });
       index == 2
-          ? showMenu()
+          ? showFavorites()
           : setState(() {
               _selectedIndex = index;
             });
     });
   }
 
-  showMenu() {
-    showModalBottomSheet(
-        context: context,
-        builder: (BuildContext context) {
-          return Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(16.0),
-                topRight: Radius.circular(16.0),
-              ),
-              color: Color(0xff232f34),
-            ),
+  showFavorites() {
+    showModalBottomSheet<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          height: 700,
+          color: Colors.amber,
+          child: Center(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
-                Container(
-                  height: 3,
-                ),
-                SizedBox(
-                    height: (56 * 6).toDouble(),
-                    child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(16.0),
-                            topRight: Radius.circular(16.0),
-                          ),
-                          color: Color(0xff344955),
-                        ),
-                        child: Stack(
-                          alignment: Alignment(0, 0),
-                          overflow: Overflow.visible,
-                          children: <Widget>[
-                            Positioned(
-                              top: -36,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(50)),
-                                    border: Border.all(
-                                        color: Color(0xff232f34), width: 10)),
-                                child: Center(
-                                  child: ClipOval(
-                                    child: Image.network(
-                                      "https://i.stack.imgur.com/S11YG.jpg?s=64&g=1",
-                                      fit: BoxFit.cover,
-                                      height: 36,
-                                      width: 36,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                              child: ListView(
-                                physics: NeverScrollableScrollPhysics(),
-                                children: <Widget>[
-                                  ListTile(
-                                    title: Text(
-                                      "Inbox",
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    leading: Icon(
-                                      Icons.inbox,
-                                      color: Colors.white,
-                                    ),
-                                    onTap: () {},
-                                  ),
-                                  ListTile(
-                                    title: Text(
-                                      "Starred",
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    leading: Icon(
-                                      Icons.star_border,
-                                      color: Colors.white,
-                                    ),
-                                    onTap: () {},
-                                  ),
-                                  ListTile(
-                                    title: Text(
-                                      "Sent",
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    leading: Icon(
-                                      Icons.send,
-                                      color: Colors.white,
-                                    ),
-                                    onTap: () {},
-                                  ),
-                                  ListTile(
-                                    title: Text(
-                                      "Trash",
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    leading: Icon(
-                                      Icons.delete_outline,
-                                      color: Colors.white,
-                                    ),
-                                    onTap: () {},
-                                  ),
-                                  ListTile(
-                                    title: Text(
-                                      "Spam",
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    leading: Icon(
-                                      Icons.error,
-                                      color: Colors.white,
-                                    ),
-                                    onTap: () {},
-                                  ),
-                                  ListTile(
-                                    title: Text(
-                                      "Drafts",
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    leading: Icon(
-                                      Icons.mail_outline,
-                                      color: Colors.white,
-                                    ),
-                                    onTap: () {},
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
-                        ))),
-                Container(
-                  height: 56,
-                  color: Color(0xff4a6572),
+                const Text('Modal BottomSheet'),
+                ElevatedButton(
+                  child: const Text('Close BottomSheet'),
+                  onPressed: () => Navigator.pop(context),
                 )
               ],
             ),
-          );
-        });
+          ),
+        );
+      },
+    );
+  }
+
+  showStoreInfo(JavascriptMessage jsMessage) {
+    showModalBottomSheet<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          height: 650,
+          color: Colors.grey,
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text('Store id : ${jsMessage.message}'),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   JavascriptChannel _markerClicked(BuildContext context) {
@@ -230,6 +137,8 @@ class customer_mainState extends State<customer_main> {
           );
 
           ScaffoldMessenger.of(context).showSnackBar(_loginSnackBar);
+
+          showStoreInfo(message);
         });
   }
 
