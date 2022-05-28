@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'boong_infoEdit.dart';
+import 'package:bottom_drawer/bottom_drawer.dart';
 
 void main() => runApp(MyApp());
 
@@ -52,6 +53,7 @@ class customer_mainState extends State<customer_main> {
   ];
 
   void _getNowLocation() async {
+    /*
     LocationPermission permission = await Geolocator.requestPermission();
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
@@ -60,6 +62,10 @@ class customer_mainState extends State<customer_main> {
           //'setMarker(${position.latitude},${position.longitude})'
           'setinitMap(${position.latitude},${position.longitude});getAllLocations();');
     }
+    */
+
+    controller!
+        .runJavascript('setinitMap(36.366522, 127.344574);getAllLocations();');
   }
 
   void _onItemTapped(int index) {
