@@ -314,7 +314,7 @@ class customer_mainState extends State<customer_main> {
             child: Transform.scale(
           scale: ratio,
           child: WebView(
-            initialUrl: "http://boongsaegwon-test.kro.kr",
+            initialUrl: "http://boongsaegwon.kro.kr",
             onWebViewCreated: (controller) {
               this.controller = controller;
             },
