@@ -30,12 +30,31 @@ class boong_main extends StatefulWidget {
   boong_mainState createState() => boong_mainState();
 }
 
+class logout {
+  String? error;
+  bool? ok;
+
+  logout({this.error, this.ok});
+
+  logout.fromJson(Map<String, dynamic> json) {
+    this.error = json['error'];
+    this.ok = json['ok'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['error'] = this.error;
+    data['ok'] = this.ok;
+    return data;
+  }
+}
+
 class boong_mainState extends State<boong_main> {
   final TextEditingController controller = TextEditingController();
   String name = "name";
   bool isTrue = true;
 
-  Future<login> fetchLogout(String id) async {
+  Future<logout> fetchLogout(String id) async {
     final msg = jsonEncode({"id": id});
     final response =
         await http.post(Uri.parse('http://boongsaegwon.kro.kr/logout'),
@@ -49,22 +68,22 @@ class boong_mainState extends State<boong_main> {
       // If the server did return a 200 OK response,
       // then parse the JSON.
 
-      if (login.fromJson(json.decode(response.body)).ok == true) {
-        final _loginSnackBar = SnackBar(
+      if (logout.fromJson(json.decode(response.body)).ok == true) {
+        final _logoutSnackBar = SnackBar(
           content: Text("로그아웃 성공."),
         );
 
-        ScaffoldMessenger.of(context).showSnackBar(_loginSnackBar);
+        ScaffoldMessenger.of(context).showSnackBar(_logoutSnackBar);
 
         Navigator.pop(context);
       }
-      return login.fromJson(json.decode(response.body));
+      return logout.fromJson(json.decode(response.body));
     } else {
-      final _loginSnackBar = SnackBar(
+      final _logoutSnackBar = SnackBar(
         content: Text("로그아웃 실패."),
       );
 
-      ScaffoldMessenger.of(context).showSnackBar(_loginSnackBar);
+      ScaffoldMessenger.of(context).showSnackBar(_logoutSnackBar);
       throw Exception('Error : Failed to logout');
     }
   }
