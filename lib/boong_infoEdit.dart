@@ -4,6 +4,9 @@ import 'package:image_picker/image_picker.dart';
 import 'boong_menuEdit.dart';
 import 'dart:io';
 import 'boong_timeEdit.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'dart:io' as IO;
 
 void main() => runApp(MyApp());
 
@@ -18,6 +21,25 @@ class MyApp extends StatelessWidget {
   }
 }
 
+class SetStoreInfo {
+  String? error;
+  bool? ok;
+
+  SetStoreInfo({this.error, this.ok});
+
+  SetStoreInfo.fromJson(Map<String, dynamic> json) {
+    this.error = json['error'];
+    this.ok = json['ok'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['error'] = this.error;
+    data['ok'] = this.ok;
+    return data;
+  }
+}
+
 class infoEdit extends StatefulWidget {
   @override
   infoEditState createState() => infoEditState();
@@ -26,9 +48,16 @@ class infoEdit extends StatefulWidget {
 class infoEditState extends State<infoEdit> {
   String name = "";
   static List<String> entries = <String>[];
-  static List<String> menus = <String>[];
+  static List<List<String>> menus = <List<String>>[];
   List<File> images = <File>[];
+  List<String> enc_images = <String>[];
   int a = 0;
+
+  // 가게 이름, 가게 설명, 영업 시간, 메뉴명 및 가격에 접근하기 위한 컨트롤러 선언
+  TextEditingController _Store_Name_Controller = TextEditingController();
+  TextEditingController _Store_Desc_Controller = TextEditingController();
+  TextEditingController _Store_Time_Controller = TextEditingController();
+  TextEditingController _Store_Menu_Controller = TextEditingController();
 
   void _setImage() async {
     var picker = ImagePicker();
@@ -38,12 +67,54 @@ class infoEditState extends State<infoEdit> {
       setState(() {
         userImage = File(image.path);
         images.add(userImage);
+
+        // 이미지 base64 인코딩
+        final bytes = userImage.readAsBytesSync();
+        enc_images.add(base64Encode(bytes));
+
         a++;
       });
     }
   }
 
   final TextEditingController controller = TextEditingController();
+
+  Future<SetStoreInfo> fetchLogin(
+      String name,
+      String store_name,
+      String category,
+      String store_description,
+      List<String> store_photo,
+      Map<String, dynamic> menu) async {
+    final msg = jsonEncode({"id": name});
+    final response =
+        await http.post(Uri.parse('http://boongsaegwon.kro.kr/set_store_info'),
+            headers: <String, String>{
+              'Content-Type': 'application/json; charset=UTF-8',
+            },
+            body: msg);
+
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+
+      if (SetStoreInfo.fromJson(json.decode(response.body)).ok == true) {
+        final _loginSnackBar = SnackBar(
+          content: Text("로그인 성공."),
+        );
+
+        ScaffoldMessenger.of(context).showSnackBar(_loginSnackBar);
+      }
+      return SetStoreInfo.fromJson(json.decode(response.body));
+    } else {
+      final _loginSnackBar = SnackBar(
+        content: Text("로그인 실패."),
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(_loginSnackBar);
+      throw Exception('Error : Failed to login');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,6 +145,7 @@ class infoEditState extends State<infoEdit> {
               Container(
                 margin: EdgeInsets.all(10.0),
                 child: TextField(
+                  controller: _Store_Name_Controller,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(6.0)),
@@ -133,6 +205,7 @@ class infoEditState extends State<infoEdit> {
                     child: Divider(color: Colors.black, thickness: 1.0),
                   ),
                   TextField(
+                    controller: _Store_Desc_Controller,
                     keyboardType: TextInputType.multiline,
                     maxLines: 5,
                     minLines: 1,
@@ -172,7 +245,7 @@ class infoEditState extends State<infoEdit> {
                         entries.add(timeEditState.returnData[i - 1]);
 
                         print("modified: $returnData");
-                        print("modified: $entries");
+                        //print("modified: $entries");
                         // 화면 새로고침
                         Navigator.pushAndRemoveUntil(
                           context,
@@ -203,7 +276,8 @@ class infoEditState extends State<infoEdit> {
                           height: 50,
                           color: Colors.black26,
                           child: Center(
-                            child: Text(menus[index]),
+                            child: Text(
+                                menus[index][0] + '     ' + menus[index][1]),
                           ));
                     },
                     separatorBuilder: (BuildContext context, int index) =>
@@ -216,7 +290,12 @@ class infoEditState extends State<infoEdit> {
                           MaterialPageRoute(builder: (context) => menuEdit()));
                       if (returnData != null) {
                         int i = menuEditState.returnData.length;
-                        menus.add(menuEditState.returnData[i - 1]);
+                        print(menuEditState.returnData[i - 1]
+                            .toString()
+                            .split("     "));
+                        menus.add(menuEditState.returnData[i - 1]
+                            .toString()
+                            .split("     "));
 
                         print("modified: $returnData");
                         // 화면 새로고침
