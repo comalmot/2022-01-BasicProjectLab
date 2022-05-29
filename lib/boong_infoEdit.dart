@@ -1,12 +1,16 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:our_town_boongsaegwon/boong_info.dart';
 import 'boong_menuEdit.dart';
 import 'dart:io';
 import 'boong_timeEdit.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io' as IO;
+import 'package:get/get.dart';
+import 'token_controller.dart';
+import 'main.dart';
 
 void main() => runApp(MyApp());
 
@@ -16,7 +20,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: '내 가게 정보',
-      home: infoEdit(),
+      home: infoEdit(""),
     );
   }
 }
@@ -41,6 +45,9 @@ class SetStoreInfo {
 }
 
 class infoEdit extends StatefulWidget {
+  final String token;
+
+  const infoEdit(this.token);
   @override
   infoEditState createState() => infoEditState();
 }
@@ -48,7 +55,7 @@ class infoEdit extends StatefulWidget {
 class infoEditState extends State<infoEdit> {
   String name = "";
   static List<String> entries = <String>[];
-  static List<List<String>> menus = <List<String>>[];
+  static List<Map<String, dynamic>> menus = [];
   List<File> images = <File>[];
   List<String> enc_images = <String>[];
   int a = 0;
@@ -79,20 +86,40 @@ class infoEditState extends State<infoEdit> {
 
   final TextEditingController controller = TextEditingController();
 
-  Future<SetStoreInfo> fetchLogin(
+  Future<SetStoreInfo> fetchSetStoreInfo(
       String name,
       String store_name,
       String category,
       String store_description,
+      List<String> store_open_info,
       List<String> store_photo,
-      Map<String, dynamic> menu) async {
-    final msg = jsonEncode({"id": name});
+      List<Map<String, dynamic>> menu) async {
+    Map<String, dynamic> requestBody = {
+      'id': "gunseung",
+      'name': name,
+      'store_name': store_name,
+      'category': category,
+      'store_description': store_description,
+      'store_open_info': {
+        'information': store_open_info,
+      },
+      'store_photo': {
+        'photo_urls': store_photo,
+      },
+      'menu_info': {
+        'menu': menu,
+      },
+    };
+    final msg = jsonEncode(requestBody);
     final response =
         await http.post(Uri.parse('http://boongsaegwon.kro.kr/set_store_info'),
-            headers: <String, String>{
+            headers: {
               'Content-Type': 'application/json; charset=UTF-8',
+              HttpHeaders.authorizationHeader: 'Bearer ${widget.token}',
             },
             body: msg);
+
+    print(requestBody); // for Debug
 
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
@@ -100,7 +127,7 @@ class infoEditState extends State<infoEdit> {
 
       if (SetStoreInfo.fromJson(json.decode(response.body)).ok == true) {
         final _loginSnackBar = SnackBar(
-          content: Text("로그인 성공."),
+          content: Text("가게 정보 입력 완료."),
         );
 
         ScaffoldMessenger.of(context).showSnackBar(_loginSnackBar);
@@ -108,7 +135,7 @@ class infoEditState extends State<infoEdit> {
       return SetStoreInfo.fromJson(json.decode(response.body));
     } else {
       final _loginSnackBar = SnackBar(
-        content: Text("로그인 실패."),
+        content: Text("가게 정보 입력 실패."),
       );
 
       ScaffoldMessenger.of(context).showSnackBar(_loginSnackBar);
@@ -249,7 +276,8 @@ class infoEditState extends State<infoEdit> {
                         // 화면 새로고침
                         Navigator.pushAndRemoveUntil(
                           context,
-                          MaterialPageRoute(builder: (context) => infoEdit()),
+                          MaterialPageRoute(
+                              builder: (context) => infoEdit(widget.token)),
                           (Route<dynamic> route) => false,
                         );
                       }
@@ -276,8 +304,9 @@ class infoEditState extends State<infoEdit> {
                           height: 50,
                           color: Colors.black26,
                           child: Center(
-                            child: Text(
-                                menus[index][0] + '     ' + menus[index][1]),
+                            child: Text(menus[index]['name'] +
+                                '     ' +
+                                menus[index]['price']),
                           ));
                     },
                     separatorBuilder: (BuildContext context, int index) =>
@@ -290,18 +319,17 @@ class infoEditState extends State<infoEdit> {
                           MaterialPageRoute(builder: (context) => menuEdit()));
                       if (returnData != null) {
                         int i = menuEditState.returnData.length;
-                        print(menuEditState.returnData[i - 1]
-                            .toString()
-                            .split("     "));
-                        menus.add(menuEditState.returnData[i - 1]
-                            .toString()
-                            .split("     "));
+                        print(returnData);
+
+                        String MainMapKeyTemp = i.toString();
+                        menus.add(returnData);
 
                         print("modified: $returnData");
                         // 화면 새로고침
                         Navigator.pushAndRemoveUntil(
                           context,
-                          MaterialPageRoute(builder: (context) => infoEdit()),
+                          MaterialPageRoute(
+                              builder: (context) => infoEdit(widget.token)),
                           (Route<dynamic> route) => false,
                         );
                       }
@@ -326,6 +354,14 @@ class infoEditState extends State<infoEdit> {
                   child: ElevatedButton(
                     //미입력된 부분 존재시 넘어가지 못하게 하는 부분 처리 x
                     onPressed: () {
+                      fetchSetStoreInfo(
+                          name,
+                          _Store_Name_Controller.text,
+                          "Default",
+                          _Store_Desc_Controller.text,
+                          entries,
+                          enc_images,
+                          menus);
                       Navigator.pop(context);
                     },
                     style: ButtonStyle(

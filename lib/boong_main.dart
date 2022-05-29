@@ -3,6 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:our_town_boongsaegwon/boong_close.dart';
 import 'main.dart';
 import 'boong_infoEdit.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'dart:io';
 
 void main() => runApp(MyApp());
 
@@ -12,13 +15,18 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: '환영합니다!',
-      home: boong_main(),
+      home: boong_main("", ""),
     );
   }
 }
 
 class boong_main extends StatefulWidget {
+  final String token;
+  final String id;
+
   @override
+  const boong_main(this.token, this.id);
+
   boong_mainState createState() => boong_mainState();
 }
 
@@ -26,6 +34,40 @@ class boong_mainState extends State<boong_main> {
   final TextEditingController controller = TextEditingController();
   String name = "name";
   bool isTrue = true;
+
+  Future<login> fetchLogout(String id) async {
+    final msg = jsonEncode({"id": id});
+    final response =
+        await http.post(Uri.parse('http://boongsaegwon.kro.kr/logout'),
+            headers: {
+              'Content-Type': 'application/json; charset=UTF-8',
+              HttpHeaders.authorizationHeader: 'Bearer ${widget.token}',
+            },
+            body: msg);
+
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+
+      if (login.fromJson(json.decode(response.body)).ok == true) {
+        final _loginSnackBar = SnackBar(
+          content: Text("로그아웃 성공."),
+        );
+
+        ScaffoldMessenger.of(context).showSnackBar(_loginSnackBar);
+
+        Navigator.pop(context);
+      }
+      return login.fromJson(json.decode(response.body));
+    } else {
+      final _loginSnackBar = SnackBar(
+        content: Text("로그아웃 실패."),
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(_loginSnackBar);
+      throw Exception('Error : Failed to logout');
+    }
+  }
 
   void _delete(BuildContext context) {
     showDialog(
@@ -40,6 +82,7 @@ class boong_mainState extends State<boong_main> {
                     setState(() {
                       isTrue = false;
                     });
+                    fetchLogout(widget.id);
                     Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -131,7 +174,8 @@ class boong_mainState extends State<boong_main> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (BuildContext context) => infoEdit()));
+                              builder: (BuildContext context) =>
+                                  infoEdit(widget.token)));
                     },
                     style: ButtonStyle(
                       textStyle: MaterialStateProperty.all(
