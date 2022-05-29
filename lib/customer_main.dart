@@ -167,45 +167,49 @@ class customer_mainState extends State<customer_main> {
         return Container(
           height: 900,
           color: Colors.white,
-          child: Padding(
-            padding: EdgeInsets.fromLTRB(40, 20, 0, 0),
-            child: Column(
-              //mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Text(
-                  '카테고리',
-                  style: TextStyle(fontSize: 24),
-                ),
-                Text('${user.category}', style: TextStyle(fontSize: 18)),
-                SizedBox(
-                  height: 30,
-                ),
-                Text('가게이름', style: TextStyle(fontSize: 24)),
-                Text('${user.store_name}', style: TextStyle(fontSize: 18)),
-                SizedBox(
-                  height: 30,
-                ),
-                Text('현재 운영 여부', style: TextStyle(fontSize: 24)),
-                Text('${user.store_open_info}', style: TextStyle(fontSize: 18)),
-                SizedBox(
-                  height: 30,
-                ),
-                Text('가게 정보', style: TextStyle(fontSize: 24)),
-                Text('${user.store_description}',
-                    style: TextStyle(fontSize: 18)),
-                SizedBox(
-                  height: 30,
-                ),
-                Text('메뉴 정보', style: TextStyle(fontSize: 24)),
-                Text('${user.menu_info}', style: TextStyle(fontSize: 18)),
-                SizedBox(
-                  height: 30,
-                ),
-                Text('가게 사진'),
-                Text('${user.store_photo}', style: TextStyle(fontSize: 18)),
-              ],
+          child: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(40, 20, 0, 0),
+              child: Column(
+                //mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Text(
+                    '카테고리',
+                    style: TextStyle(fontSize: 24),
+                  ),
+                  Text('${user.category}', style: TextStyle(fontSize: 18)),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Text('가게이름', style: TextStyle(fontSize: 24)),
+                  Text('${user.store_name}', style: TextStyle(fontSize: 18)),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Text('현재 운영 여부', style: TextStyle(fontSize: 24)),
+                  Text('${user.store_open_info}',
+                      style: TextStyle(fontSize: 18)),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Text('가게 정보', style: TextStyle(fontSize: 24)),
+                  Text('${user.store_description}',
+                      style: TextStyle(fontSize: 18)),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Text('메뉴 정보', style: TextStyle(fontSize: 24)),
+                  Text('${user.menu_info}', style: TextStyle(fontSize: 18)),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Text('가게 사진', style: TextStyle(fontSize: 24)),
+                  Text('${user.store_photo}', style: TextStyle(fontSize: 18)),
+                ],
+              ),
             ),
           ),
         );
