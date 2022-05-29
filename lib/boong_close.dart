@@ -1,10 +1,9 @@
-  import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'boong_main.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -38,16 +37,21 @@ class boong_closeState extends State<boong_close> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder:
-                                (BuildContext context) =>
-                                boong_main()));
+                            builder: (BuildContext context) =>
+                                boong_main("", "")));
                   },
-                  child: const Text('Yes', style: TextStyle(fontSize: 20),)),
+                  child: const Text(
+                    'Yes',
+                    style: TextStyle(fontSize: 20),
+                  )),
               TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: const Text('No', style: TextStyle(fontSize: 20),))
+                  child: const Text(
+                    'No',
+                    style: TextStyle(fontSize: 20),
+                  ))
             ],
           );
         });
@@ -57,28 +61,34 @@ class boong_closeState extends State<boong_close> {
   Widget build(BuildContext context) {
     return WillPopScope(
         child: Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: Text("영업 중..."),
-          backgroundColor: Colors.black26,
-        ),
-        body: Container(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            children: <Widget>[
-              const SizedBox(height: 50.0,),
-              Container(margin: EdgeInsets.all(8.0),),
-              ElevatedButton(onPressed:isTrue == true ? () => _closing(context) : null,
-                  style: ButtonStyle(
-                    textStyle: MaterialStateProperty.all(
-                        TextStyle(fontSize: 40, color: Colors.white)),
-                    backgroundColor:
-                    MaterialStateProperty.all(Colors.black45),
+            appBar: AppBar(
+              automaticallyImplyLeading: false,
+              title: Text("영업 중..."),
+              backgroundColor: Colors.black26,
+            ),
+            body: Container(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                children: <Widget>[
+                  const SizedBox(
+                    height: 50.0,
                   ),
-                  child: Text("영업종료")),
-            ],
-          ),
-        )
-    ), onWillPop: () async => false);
+                  Container(
+                    margin: EdgeInsets.all(8.0),
+                  ),
+                  ElevatedButton(
+                      onPressed:
+                          isTrue == true ? () => _closing(context) : null,
+                      style: ButtonStyle(
+                        textStyle: MaterialStateProperty.all(
+                            TextStyle(fontSize: 40, color: Colors.white)),
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.black45),
+                      ),
+                      child: Text("영업종료")),
+                ],
+              ),
+            )),
+        onWillPop: () async => false);
   }
 }

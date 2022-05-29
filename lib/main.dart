@@ -8,6 +8,8 @@ import 'dart:convert';
 import 'boong_main.dart';
 import 'boong_join.dart';
 import 'customer_main.dart';
+import 'package:get/get.dart';
+import 'token_controller.dart';
 
 class login {
   String? error;
@@ -30,6 +32,8 @@ class login {
     return data;
   }
 }
+
+class Arguments {}
 
 void main() => runApp(MyApp());
 
@@ -82,6 +86,9 @@ class MyEditTextState extends State<MyEditText> {
     late Future<login> _loginfutureAlbum;
     GlobalKey<ScaffoldState> _loginSnackBar = GlobalKey();
 
+    final TokenController =
+        Get.put(token_controller()); // GetX를 활용해 Token 상태관리.
+
     Future<login> fetchLogin(String id, String pwd) async {
       final msg = jsonEncode({"id": id, "password": pwd});
       final response =
@@ -101,10 +108,19 @@ class MyEditTextState extends State<MyEditText> {
           );
 
           ScaffoldMessenger.of(context).showSnackBar(_loginSnackBar);
+
+          TokenController.updateToken(
+              login.fromJson(json.decode(response.body)).token.toString());
+
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (BuildContext context) => boong_main()));
+                  builder: (BuildContext context) => boong_main(
+                      login
+                          .fromJson(json.decode(response.body))
+                          .token
+                          .toString(),
+                      id)));
         }
         return login.fromJson(json.decode(response.body));
       } else {
