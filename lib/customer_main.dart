@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:geolocator/geolocator.dart';
@@ -5,6 +7,52 @@ import 'boong_infoEdit.dart';
 import 'package:bottom_drawer/bottom_drawer.dart';
 
 void main() => runApp(MyApp());
+
+class storeInfo {
+  String category = "";
+  String? error;
+  String? menu_info;
+  String name = "";
+  bool ok = false;
+  String? store_description;
+  String store_name = "";
+  String? store_open_info;
+  String? store_photo;
+
+  storeInfo(
+      this.category,
+      this.error,
+      this.menu_info,
+      this.name,
+      this.ok,
+      this.store_description,
+      this.store_name,
+      this.store_open_info,
+      this.store_photo);
+
+  storeInfo.fromJson(Map<String, dynamic> json)
+      : category = json['category'],
+        error = json['error'],
+        menu_info = json['menu_info'],
+        name = json['name'],
+        ok = json['ok'],
+        store_description = json['store_description'],
+        store_name = json['store_name'],
+        store_open_info = json['store_open_info'],
+        store_photo = json['store_photo'];
+
+  Map<String, dynamic> toJson() => {
+        'category': category,
+        'error': error,
+        'menu_info': menu_info,
+        'name': name,
+        'ok': ok,
+        'store_description': store_description,
+        'store_name': store_name,
+        'store_open_info': store_open_info,
+        'store_photo': store_photo,
+      };
+}
 
 class Markers {
   double latitude = 0.0;
@@ -96,9 +144,11 @@ class customer_mainState extends State<customer_main> {
               children: <Widget>[
                 const Text('Modal BottomSheet'),
                 ElevatedButton(
-                  child: const Text('Close BottomSheet'),
-                  onPressed: () => Navigator.pop(context),
-                )
+                    child: const Text('Close BottomSheet'),
+                    onPressed: () {
+                      _selectedIndex = 1;
+                      Navigator.pop(context);
+                    })
               ],
             ),
           ),
@@ -108,18 +158,53 @@ class customer_mainState extends State<customer_main> {
   }
 
   showStoreInfo(JavascriptMessage jsMessage) {
+    Map<String, dynamic> responseMap = jsonDecode(jsMessage.message);
+    var user = storeInfo.fromJson(responseMap);
+
     showModalBottomSheet<void>(
       context: context,
       builder: (BuildContext context) {
         return Container(
-          height: 650,
-          color: Colors.grey,
-          child: Center(
+          height: 900,
+          color: Colors.white,
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(40, 20, 0, 0),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              //mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Text('Store id : ${jsMessage.message}'),
+                Text(
+                  '카테고리',
+                  style: TextStyle(fontSize: 24),
+                ),
+                Text('${user.category}', style: TextStyle(fontSize: 18)),
+                SizedBox(
+                  height: 30,
+                ),
+                Text('가게이름', style: TextStyle(fontSize: 24)),
+                Text('${user.store_name}', style: TextStyle(fontSize: 18)),
+                SizedBox(
+                  height: 30,
+                ),
+                Text('현재 운영 여부', style: TextStyle(fontSize: 24)),
+                Text('${user.store_open_info}', style: TextStyle(fontSize: 18)),
+                SizedBox(
+                  height: 30,
+                ),
+                Text('가게 정보', style: TextStyle(fontSize: 24)),
+                Text('${user.store_description}',
+                    style: TextStyle(fontSize: 18)),
+                SizedBox(
+                  height: 30,
+                ),
+                Text('메뉴 정보', style: TextStyle(fontSize: 24)),
+                Text('${user.menu_info}', style: TextStyle(fontSize: 18)),
+                SizedBox(
+                  height: 30,
+                ),
+                Text('가게 사진'),
+                Text('${user.store_photo}', style: TextStyle(fontSize: 18)),
               ],
             ),
           ),
@@ -132,12 +217,6 @@ class customer_mainState extends State<customer_main> {
     return JavascriptChannel(
         name: 'taeHyeonTV',
         onMessageReceived: (JavascriptMessage message) {
-          final _loginSnackBar = SnackBar(
-            content: Text(message.message),
-          );
-
-          ScaffoldMessenger.of(context).showSnackBar(_loginSnackBar);
-
           showStoreInfo(message);
         });
   }
@@ -164,60 +243,70 @@ class customer_mainState extends State<customer_main> {
             ListTile(
               title: Text('붕어빵'),
               onTap: () {
+                _selectedIndex = 1;
                 Navigator.pop(context);
               },
             ),
             ListTile(
               title: Text('문어빵'),
               onTap: () {
+                _selectedIndex = 1;
                 Navigator.pop(context);
               },
             ),
             ListTile(
               title: Text('츄러스'),
               onTap: () {
+                _selectedIndex = 1;
                 Navigator.pop(context);
               },
             ),
             ListTile(
               title: Text('호떡'),
               onTap: () {
+                _selectedIndex = 1;
                 Navigator.pop(context);
               },
             ),
             ListTile(
               title: Text('크레페'),
               onTap: () {
+                _selectedIndex = 1;
                 Navigator.pop(context);
               },
             ),
             ListTile(
               title: Text('돈가스'),
               onTap: () {
+                _selectedIndex = 1;
                 Navigator.pop(context);
               },
             ),
             ListTile(
               title: Text('아이스크림'),
               onTap: () {
+                _selectedIndex = 1;
                 Navigator.pop(context);
               },
             ),
             ListTile(
               title: Text('닭꼬치'),
               onTap: () {
+                _selectedIndex = 1;
                 Navigator.pop(context);
               },
             ),
             ListTile(
               title: Text('떡볶이'),
               onTap: () {
+                _selectedIndex = 1;
                 Navigator.pop(context);
               },
             ),
             ListTile(
               title: Text('순대'),
               onTap: () {
+                _selectedIndex = 1;
                 Navigator.pop(context);
               },
             ),
