@@ -27,8 +27,6 @@ class searchStoreState extends State<searchStore> {
   List<String> storeName = [];
   List<String> storeLocation = [];
   List<String> storeDistance = [];
-
-  bool ok = false;
   
   @override
   Widget build(BuildContext context) {
@@ -53,9 +51,6 @@ class searchStoreState extends State<searchStore> {
                       margin: const EdgeInsets.fromLTRB(0, 0, 7, 10),
                       child: TextField(
                         controller: _textController,
-                        // onChanged: (val) {
-                        //   search = val;
-                        // },
                         decoration: const InputDecoration(
                             focusedBorder: OutlineInputBorder(
                               borderRadius:
