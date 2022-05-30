@@ -155,12 +155,41 @@ class customer_mainState extends State<customer_main> {
   }
 */
 
+  Widget buildMyMenu(BuildContext context, List<Map<String, dynamic>> Menus) {
+    List<Widget> myMenuList = [];
+    if (Menus != null) {
+      for (var item in Menus) {
+        myMenuList.add(Container(
+          width: 400,
+          child: Row(
+            children: <Widget>[
+              Text(item['name']), // 메뉴 이름
+              Text(item['price']), // 메뉴 가격
+              Image.network(item['photo']),
+            ],
+          ),
+        ));
+      }
+      return Container(
+        height: 900,
+        child: Row(
+          children: myMenuList,
+        ),
+      );
+    }
+
+    return Container(
+      child: Text("메뉴 정보를 불러오지 못했습니다."),
+    );
+  }
+
   showStoreInfo(JavascriptMessage jsMessage) {
     Map<String, dynamic> responseMap = jsonDecode(jsMessage.message);
     var user = storeInfo.fromJson(responseMap);
     List<Widget> _storeImageWidgetList = [];
-
+    List<Map<String, dynamic>> Menus = [];
     var store_Photos = user.store_photo;
+    Menus = user.menu_info!;
 
     if (store_Photos != null) {
       for (var item in store_Photos) {
@@ -229,7 +258,10 @@ class customer_mainState extends State<customer_main> {
                     child: Row(
                       children: _storeImageWidgetList,
                     ),
-                  )
+                  ),
+                  Container(
+                    child: buildMyMenu(context, Menus),
+                  ),
                 ],
               ),
             ),
