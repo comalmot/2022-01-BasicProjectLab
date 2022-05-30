@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:our_town_boongsaegwon/boong_close.dart';
+import 'package:our_town_boongsaegwon/boong_open.dart';
 import 'main.dart';
 import 'boong_infoEdit.dart';
 import 'package:http/http.dart' as http;
@@ -175,9 +176,10 @@ class boong_mainState extends State<boong_main> {
                           context,
                           MaterialPageRoute(
                               builder: (BuildContext context) =>
-                                  boong_close()));
+                                  boong_open(widget.token, widget.id)));
                     },
                     //원래 지도가 연결되어야 하는데 일단 영업종료 버튼 창이 나오도록 연결해놓움
+                    // -> 2022.05.30 수정 완료.
                     style: ButtonStyle(
                       textStyle: MaterialStateProperty.all(
                           TextStyle(fontSize: 40, color: Colors.white)),
@@ -194,7 +196,7 @@ class boong_mainState extends State<boong_main> {
                           context,
                           MaterialPageRoute(
                               builder: (BuildContext context) =>
-                                  infoEdit(widget.token)));
+                                  infoEdit(widget.token, widget.id)));
                     },
                     style: ButtonStyle(
                       textStyle: MaterialStateProperty.all(
