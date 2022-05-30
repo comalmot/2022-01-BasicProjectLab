@@ -85,7 +85,7 @@ class infoEditState extends State<infoEdit> {
   }
 
   final TextEditingController controller = TextEditingController();
-
+// fetchGetStoreInfo 함수 생성 예정.
   Future<SetStoreInfo> fetchSetStoreInfo(
       String id,
       String name, // 변경될 가게 이름..?
