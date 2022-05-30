@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: '영업일시 및 장소 수정',
+      title: '영업 시작하기',
       home: boong_open("", ""),
     );
   }
@@ -48,6 +48,10 @@ class boong_open extends StatefulWidget {
   @override
   boong_mainState createState() => boong_mainState();
 }
+
+// 좌표 설정을 위한 전역 변수
+double _lat = 0.0;
+double _lng = 0.0;
 
 class boong_mainState extends State<boong_open> {
   String url = ""; // 띄울 웹 페이지의 주소
@@ -63,6 +67,11 @@ class boong_mainState extends State<boong_open> {
       controller!.runJavascript(
           'setinitMap(${position.latitude},${position.longitude});setMarker(${position.latitude},${position.longitude})');
     }
+
+    _lat = position.latitude;
+    _lng = position.longitude;
+    -> 2022.05.30 진건승 : Location Service가 허용된 장치에서만 주석해제하고 실행.
+       이 경우 하단의 코드는 주석처리 부탁.
     */
 
     controller!.runJavascript(
@@ -73,7 +82,8 @@ class boong_mainState extends State<boong_open> {
   Widget build(BuildContext context) {
     double ratio = MediaQuery.of(context).devicePixelRatio;
 
-    Future<LocationInfo> fetchLogin(String id, double lat, double lng) async {
+    Future<LocationInfo> fetchLocation(
+        String id, double lat, double lng) async {
       final msg = jsonEncode(
           {"id": id, "latitude": lat, "longitude": lng, "is_open": true});
       final response =
@@ -99,7 +109,7 @@ class boong_mainState extends State<boong_open> {
               context,
               MaterialPageRoute(
                   builder: (BuildContext context) =>
-                      boong_close(widget.token, widget.id)));
+                      boong_close(widget.token, widget.id, lat, lng)));
         }
         return LocationInfo.fromJson(json.decode(response.body));
       } else {
@@ -114,21 +124,58 @@ class boong_mainState extends State<boong_open> {
 
     return Scaffold(
       body: SafeArea(
-        child: ClipRect(
-            child: Transform.scale(
-          scale: ratio,
-          child: WebView(
-            initialUrl: "http://boongsaegwon.kro.kr",
-            onWebViewCreated: (controller) {
-              this.controller = controller;
-            },
-            javascriptMode: JavascriptMode.unrestricted,
-            onPageFinished: (String url) {
-              _getNowLocation();
-            },
-          ),
-        )),
-      ),
+          child: Row(
+        children: <Widget>[
+          ClipRect(
+              child: Transform.scale(
+            scale: ratio,
+            child: WebView(
+              initialUrl: "http://boongsaegwon.kro.kr",
+              onWebViewCreated: (controller) {
+                this.controller = controller;
+              },
+              javascriptMode: JavascriptMode.unrestricted,
+              onPageFinished: (String url) {
+                _getNowLocation();
+              },
+            ),
+          )),
+          Container(
+            height: 200,
+            child: Row(
+              children: [
+                ElevatedButton(
+                    onPressed: () {
+                      fetchLocation(
+                          widget.id, 36.366522, 127.344574); // 임시로 고정값을 넣어줌.
+                      /* 아래로 변경 필요
+                      fetchLocation(
+                        widget.id, _lat, _lng);
+                      )
+                      */
+                      fetchLocation(widget.id, _lat, _lng);
+                    },
+                    style: ButtonStyle(
+                        textStyle: MaterialStateProperty.all(
+                            TextStyle(fontSize: 20, color: Colors.white)),
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.black45)),
+                    child: Text("확인")),
+                ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    style: ButtonStyle(
+                        textStyle: MaterialStateProperty.all(
+                            TextStyle(fontSize: 20, color: Colors.white)),
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.black45)),
+                    child: Text("취소"))
+              ],
+            ),
+          )
+        ],
+      )),
     );
   }
 }
