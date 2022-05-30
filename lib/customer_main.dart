@@ -5,6 +5,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'boong_infoEdit.dart';
 import 'package:bottom_drawer/bottom_drawer.dart';
+import 'bookMark.dart';
 
 void main() => runApp(MyApp());
 
@@ -121,30 +122,34 @@ class customer_mainState extends State<customer_main> {
   }
 
   showFavorites() {
-    showModalBottomSheet<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return Container(
-          height: 700,
-          color: Colors.amber,
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                const Text('Modal BottomSheet'),
-                ElevatedButton(
-                    child: const Text('Close BottomSheet'),
-                    onPressed: () {
-                      _selectedIndex = 1;
-                      Navigator.pop(context);
-                    })
-              ],
-            ),
-          ),
-        );
-      },
-    );
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (BuildContext context) => bookMark()));
+    // showModalBottomSheet<void>(
+    //   context: context,
+    //   builder: (BuildContext context) {
+    //     return Container(
+    //       height: 700,
+    //       color: Colors.amber,
+    //       child: Center(
+    //         child: Column(
+    //           mainAxisAlignment: MainAxisAlignment.center,
+    //           mainAxisSize: MainAxisSize.min,
+    //           children: <Widget>[
+    //             const Text('Modal BottomSheet'),
+    //             ElevatedButton(
+    //                 child: const Text('Close BottomSheet'),
+    //                 onPressed: () {
+    //                   _selectedIndex = 1;
+    //                   Navigator.pop(context);
+    //                 })
+    //           ],
+    //         ),
+    //       ),
+    //     );
+    //   },
+    // );
   }
 /*
   Widget buildMyImage(BuildContext context, List<Widget>? Images) {
