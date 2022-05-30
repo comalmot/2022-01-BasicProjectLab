@@ -234,7 +234,7 @@ class makeProfileState extends State<makeProfile> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (BuildContext context) => info()));
+                                builder: (BuildContext context) => info("","")));
                       } else {}
                     } else if (snapshot.hasError) {}
                     return CircularProgressIndicator();

@@ -92,11 +92,11 @@ class MyEditTextState extends State<MyEditText> {
     Future<login> fetchLogin(String id, String pwd) async {
       final msg = jsonEncode({"id": id, "password": pwd});
       final response =
-          await http.post(Uri.parse('http://boongsaegwon.kro.kr/login'),
-              headers: <String, String>{
-                'Content-Type': 'application/json; charset=UTF-8',
-              },
-              body: msg);
+      await http.post(Uri.parse('http://boongsaegwon.kro.kr/login'),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: msg);
 
       if (response.statusCode == 200) {
         // If the server did return a 200 OK response,
@@ -158,7 +158,7 @@ class MyEditTextState extends State<MyEditText> {
                     Text(
                       '시작하기',
                       style:
-                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                      TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                     ),
                     Container(
                         width: 100,
@@ -183,15 +183,15 @@ class MyEditTextState extends State<MyEditText> {
                           labelText: '아이디',
                           focusedBorder: OutlineInputBorder(
                             borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
+                            BorderRadius.all(Radius.circular(10.0)),
                             borderSide:
-                                BorderSide(width: 1, color: Colors.black),
+                            BorderSide(width: 1, color: Colors.black),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
+                            BorderRadius.all(Radius.circular(10.0)),
                             borderSide:
-                                BorderSide(width: 1, color: Colors.grey),
+                            BorderSide(width: 1, color: Colors.grey),
                           ),
                           hintText: "아이디"),
                     ),
@@ -205,15 +205,15 @@ class MyEditTextState extends State<MyEditText> {
                           labelText: '비밀번호',
                           focusedBorder: OutlineInputBorder(
                             borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
+                            BorderRadius.all(Radius.circular(10.0)),
                             borderSide:
-                                BorderSide(width: 1, color: Colors.black),
+                            BorderSide(width: 1, color: Colors.black),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
+                            BorderRadius.all(Radius.circular(10.0)),
                             borderSide:
-                                BorderSide(width: 1, color: Colors.grey),
+                            BorderSide(width: 1, color: Colors.grey),
                           ),
                           hintText: "비밀번호"),
                     ),
@@ -235,7 +235,7 @@ class MyEditTextState extends State<MyEditText> {
                               textStyle: MaterialStateProperty.all(
                                   TextStyle(fontSize: 20, color: Colors.white)),
                               backgroundColor:
-                                  MaterialStateProperty.all(Colors.black45)),
+                              MaterialStateProperty.all(Colors.black45)),
                           child: Text("회원가입"),
                         ),
                         Container(
@@ -267,7 +267,7 @@ class MyEditTextState extends State<MyEditText> {
                               textStyle: MaterialStateProperty.all(
                                   TextStyle(fontSize: 20, color: Colors.white)),
                               backgroundColor:
-                                  MaterialStateProperty.all(Colors.grey)),
+                              MaterialStateProperty.all(Colors.grey)),
                           child: Text("로그인"),
                         )
                       ],

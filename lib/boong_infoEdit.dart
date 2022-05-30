@@ -65,6 +65,7 @@ class infoEditState extends State<infoEdit> {
   TextEditingController _Store_Desc_Controller = TextEditingController();
   TextEditingController _Store_Time_Controller = TextEditingController();
   TextEditingController _Store_Menu_Controller = TextEditingController();
+  TextEditingController _Store_Cate_Controller = TextEditingController();
 
   void _setImage() async {
     var picker = ImagePicker();
@@ -174,6 +175,22 @@ class infoEditState extends State<infoEdit> {
                 margin: EdgeInsets.all(10.0),
                 child: TextField(
                   controller: _Store_Name_Controller,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(6.0)),
+                    ),
+                  ),
+                ),
+              ),
+
+              Text(
+                "카테고리",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              Container(
+                margin: EdgeInsets.all(10.0),
+                child: TextField(
+                  controller: _Store_Cate_Controller,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(6.0)),
@@ -361,7 +378,7 @@ class infoEditState extends State<infoEdit> {
                           widget.id,
                           name,
                           _Store_Name_Controller.text,
-                          "Default",
+                          _Store_Cate_Controller.text,
                           _Store_Desc_Controller.text,
                           entries,
                           enc_images,
