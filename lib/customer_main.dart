@@ -11,13 +11,13 @@ void main() => runApp(MyApp());
 class storeInfo {
   String category = "";
   String? error;
-  String? menu_info;
+  List<Map<String, dynamic>>? menu_info;
   String name = "";
   bool ok = false;
   String? store_description;
   String store_name = "";
-  String? store_open_info;
-  String? store_photo;
+  List<String>? store_open_info;
+  List<String>? store_photo;
 
   storeInfo(
       this.category,
@@ -33,13 +33,13 @@ class storeInfo {
   storeInfo.fromJson(Map<String, dynamic> json)
       : category = json['category'],
         error = json['error'],
-        menu_info = json['menu_info'],
+        menu_info = json['menu_info']['menu'],
         name = json['name'],
         ok = json['ok'],
         store_description = json['store_description'],
         store_name = json['store_name'],
-        store_open_info = json['store_open_info'],
-        store_photo = json['store_photo'];
+        store_open_info = json['store_open_info']['information'],
+        store_photo = json['store_photo']['photo_urls'];
 
   Map<String, dynamic> toJson() => {
         'category': category,
@@ -88,16 +88,6 @@ class customer_mainState extends State<customer_main> {
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
   GlobalKey<ScaffoldState> _BottomdrawerKey = GlobalKey();
-  static List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Index 1: Business',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 2: School',
-      style: optionStyle,
-    ),
-  ];
 
   void _getNowLocation() async {
     /*
@@ -156,10 +146,36 @@ class customer_mainState extends State<customer_main> {
       },
     );
   }
+/*
+  Widget buildMyImage(BuildContext context, List<Widget>? Images) {
+    return Container(
+      height: 900,
+      child: Images,
+    );
+  }
+*/
 
   showStoreInfo(JavascriptMessage jsMessage) {
     Map<String, dynamic> responseMap = jsonDecode(jsMessage.message);
     var user = storeInfo.fromJson(responseMap);
+    List<Widget> _storeImageWidgetList = [];
+
+    var store_Photos = user.store_photo;
+
+    if (store_Photos != null) {
+      for (var item in store_Photos) {
+        _storeImageWidgetList!.add(
+          Row(
+            children: <Widget>[
+              Image.network(item),
+              SizedBox(
+                height: 30,
+              ),
+            ],
+          ),
+        );
+      }
+    }
 
     showModalBottomSheet<void>(
       context: context,
@@ -208,6 +224,12 @@ class customer_mainState extends State<customer_main> {
                   ),
                   Text('가게 사진', style: TextStyle(fontSize: 24)),
                   Text('${user.store_photo}', style: TextStyle(fontSize: 18)),
+                  Container(
+                    // 가게 사진 보여주는 부분
+                    child: Row(
+                      children: _storeImageWidgetList,
+                    ),
+                  )
                 ],
               ),
             ),
