@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: '내 가게 정보',
-      home: infoEdit(""),
+      home: infoEdit("", ""),
     );
   }
 }
@@ -46,8 +46,8 @@ class SetStoreInfo {
 
 class infoEdit extends StatefulWidget {
   final String token;
-
-  const infoEdit(this.token);
+  final String id;
+  const infoEdit(this.token, this.id);
   @override
   infoEditState createState() => infoEditState();
 }
@@ -87,7 +87,8 @@ class infoEditState extends State<infoEdit> {
   final TextEditingController controller = TextEditingController();
 
   Future<SetStoreInfo> fetchSetStoreInfo(
-      String name,
+      String id,
+      String name, // 변경될 가게 이름..?
       String store_name,
       String category,
       String store_description,
@@ -95,7 +96,7 @@ class infoEditState extends State<infoEdit> {
       List<String> store_photo,
       List<Map<String, dynamic>> menu) async {
     Map<String, dynamic> requestBody = {
-      'id': "gunseung",
+      'id': id,
       'name': name,
       'store_name': store_name,
       'category': category,
@@ -277,7 +278,8 @@ class infoEditState extends State<infoEdit> {
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => infoEdit(widget.token)),
+                              builder: (context) =>
+                                  infoEdit(widget.token, widget.id)),
                           (Route<dynamic> route) => false,
                         );
                       }
@@ -329,7 +331,8 @@ class infoEditState extends State<infoEdit> {
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => infoEdit(widget.token)),
+                              builder: (context) =>
+                                  infoEdit(widget.token, widget.id)),
                           (Route<dynamic> route) => false,
                         );
                       }
@@ -355,6 +358,7 @@ class infoEditState extends State<infoEdit> {
                     //미입력된 부분 존재시 넘어가지 못하게 하는 부분 처리 x
                     onPressed: () {
                       fetchSetStoreInfo(
+                          widget.id,
                           name,
                           _Store_Name_Controller.text,
                           "Default",
