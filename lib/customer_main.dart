@@ -193,7 +193,7 @@ class customer_mainState extends State<customer_main> {
 
     if (store_Photos != null) {
       for (var item in store_Photos) {
-        _storeImageWidgetList!.add(
+        _storeImageWidgetList.add(
           Row(
             children: <Widget>[
               Image.network(item),
