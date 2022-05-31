@@ -44,6 +44,52 @@ class SetStoreInfo {
   }
 }
 
+class GetStoreInfo {
+  String category = "";
+  String? error;
+  List<Map<String, dynamic>>? menu_info;
+  String name = "";
+  bool ok = false;
+  String? store_description;
+  String store_name = "";
+  List<String>? store_open_info;
+  List<String>? store_photo;
+
+  GetStoreInfo(
+      this.category,
+      this.error,
+      this.menu_info,
+      this.name,
+      this.ok,
+      this.store_description,
+      this.store_name,
+      this.store_open_info,
+      this.store_photo);
+
+  GetStoreInfo.fromJson(Map<String, dynamic> json)
+      : category = json['category'],
+        error = json['error'],
+        menu_info = json['menu_info']['menu'],
+        name = json['name'],
+        ok = json['ok'],
+        store_description = json['store_description'],
+        store_name = json['store_name'],
+        store_open_info = json['store_open_info']['information'],
+        store_photo = json['store_photo']['photo_urls'];
+
+  Map<String, dynamic> toJson() => {
+        'category': category,
+        'error': error,
+        'menu_info': menu_info,
+        'name': name,
+        'ok': ok,
+        'store_description': store_description,
+        'store_name': store_name,
+        'store_open_info': store_open_info,
+        'store_photo': store_photo,
+      };
+}
+
 class infoEdit extends StatefulWidget {
   final String token;
   final String id;
@@ -87,6 +133,41 @@ class infoEditState extends State<infoEdit> {
 
   final TextEditingController controller = TextEditingController();
 // fetchGetStoreInfo 함수 생성 예정.
+
+  Future<GetStoreInfo> fetchGetStoreInfo(String id) async {
+    final msg = jsonEncode({"id": id});
+    final response =
+        await http.post(Uri.parse('http://boongsaegwon.kro.kr/get_store_info'),
+            headers: {
+              'Content-Type': 'application/json; charset=UTF-8',
+              HttpHeaders.authorizationHeader: 'Bearer ${widget.token}',
+            },
+            body: msg);
+
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+
+      if (GetStoreInfo.fromJson(json.decode(response.body)).ok == true) {
+        final _logoutSnackBar = SnackBar(
+          content: Text("로그아웃 성공."),
+        );
+
+        ScaffoldMessenger.of(context).showSnackBar(_logoutSnackBar);
+
+        Navigator.pop(context);
+      }
+      return GetStoreInfo.fromJson(json.decode(response.body));
+    } else {
+      final _logoutSnackBar = SnackBar(
+        content: Text("로그아웃 실패."),
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(_logoutSnackBar);
+      throw Exception('Error : Failed to logout');
+    }
+  }
+
   Future<SetStoreInfo> fetchSetStoreInfo(
       String id,
       String name, // 변경될 가게 이름..?
@@ -182,7 +263,6 @@ class infoEditState extends State<infoEdit> {
                   ),
                 ),
               ),
-
               Text(
                 "카테고리",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
