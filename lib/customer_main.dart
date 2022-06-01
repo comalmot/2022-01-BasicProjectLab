@@ -158,7 +158,7 @@ class customer_mainState extends State<customer_main> {
   }
 */
 
-  Widget buildMyMenu(BuildContext context, List<dynamic> Menus) {
+  Widget buildMyMenu(BuildContext context, List<dynamic>? Menus) {
     List<Widget> myMenuList = [];
     if (Menus != null) {
       for (var item in Menus) {
@@ -170,7 +170,17 @@ class customer_mainState extends State<customer_main> {
               children: <Widget>[
                 Text(item['name'] + "\n"), // 메뉴 이름
                 Text(item['price'].toString() + "\n"), // 메뉴 가격
-                Image.network(item['photo'].toString()),
+                ClipRect(
+                  child: Container(
+                    child: Align(
+                      alignment: Alignment.center,
+                      widthFactor: 0.5,
+                      heightFactor: 0.5,
+                      child: Image.network(item['photo'].toString()),
+                    ),
+                  ),
+                ),
+
                 SizedBox(
                   height: 30,
                 ),
@@ -206,6 +216,30 @@ class customer_mainState extends State<customer_main> {
     );
   }
 
+  Widget buildmyStoreInfo(List<dynamic>? storeinfo) {
+    List<Widget> myStoreInfoList = [];
+
+    if (storeinfo != null) {
+      for (var item in storeinfo) {
+        myStoreInfoList.add(
+          Column(
+            children: <Widget>[
+              Text("${item}"),
+              SizedBox(
+                height: 30,
+              )
+            ],
+          ),
+        );
+      }
+      return Column(
+        children: myStoreInfoList,
+      );
+    } else {
+      return Text("가게 정보 불러오기 실패! 관리자에게 문의하세요.");
+    }
+  }
+
   showStoreInfo(JavascriptMessage jsMessage) {
     Map<String, dynamic> responseMap = jsonDecode(jsMessage.message);
     var user = storeInfo.fromJson(responseMap);
@@ -219,7 +253,7 @@ class customer_mainState extends State<customer_main> {
         _storeImageWidgetList.add(
           Row(
             children: <Widget>[
-              //Image.network(item),
+              Image.network(item),
               SizedBox(
                 height: 30,
               ),
@@ -257,9 +291,13 @@ class customer_mainState extends State<customer_main> {
                   SizedBox(
                     height: 30,
                   ),
-                  Text('현재 운영 여부', style: TextStyle(fontSize: 24)),
-                  Text('${user.store_open_info}',
-                      style: TextStyle(fontSize: 18)),
+                  Text('현재 운영 여부 및 운영 시간', style: TextStyle(fontSize: 24)),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Container(
+                    child: buildmyStoreInfo(user.store_open_info),
+                  ),
                   SizedBox(
                     height: 30,
                   ),
@@ -283,14 +321,20 @@ class customer_mainState extends State<customer_main> {
                   SizedBox(
                     height: 30,
                   ),
-                  Image.network('${user.store_photo![1]}'),
-                  //Text('${user.store_photo}', style: TextStyle(fontSize: 18)),
-                  Container(
-                    // 가게 사진 보여주는 부분
-                    child: Row(
-                      children: _storeImageWidgetList,
+                  ClipRect(
+                    child: Container(
+                      child: Align(
+                        alignment: Alignment.center,
+                        widthFactor: 0.5,
+                        heightFactor: 0.5,
+                        child: Image.network('${user.store_photo![1]}'),
+                      ),
                     ),
                   ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  //Text('${user.store_photo}', style: TextStyle(fontSize: 18)),
                 ],
               ),
             ),
