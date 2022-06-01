@@ -12,13 +12,13 @@ void main() => runApp(MyApp());
 class storeInfo {
   String category = "";
   String? error;
-  List<Map<String, dynamic>>? menu_info;
+  List<dynamic>? menu_info;
   String name = "";
   bool ok = false;
   String? store_description;
   String store_name = "";
-  List<String>? store_open_info;
-  List<String>? store_photo;
+  List<dynamic>? store_open_info;
+  List<dynamic>? store_photo;
 
   storeInfo(
       this.category,
@@ -122,10 +122,8 @@ class customer_mainState extends State<customer_main> {
   }
 
   showFavorites() {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (BuildContext context) => bookMark()));
+    Navigator.push(context,
+        MaterialPageRoute(builder: (BuildContext context) => bookMark()));
     // showModalBottomSheet<void>(
     //   context: context,
     //   builder: (BuildContext context) {
@@ -160,20 +158,34 @@ class customer_mainState extends State<customer_main> {
   }
 */
 
-  Widget buildMyMenu(BuildContext context, List<Map<String, dynamic>> Menus) {
+  Widget buildMyMenu(BuildContext context, List<dynamic> Menus) {
     List<Widget> myMenuList = [];
     if (Menus != null) {
       for (var item in Menus) {
-        myMenuList.add(Container(
-          width: 400,
-          child: Row(
-            children: <Widget>[
-              Text(item['name']), // 메뉴 이름
-              Text(item['price']), // 메뉴 가격
-              Image.network(item['photo']),
-            ],
-          ),
-        ));
+        if (item['photo'] != null) {
+          // Photo가 있는 경우
+          myMenuList.add(Container(
+            height: 800,
+            child: Row(
+              children: <Widget>[
+                Text(item['name'] + "\n"), // 메뉴 이름
+                Text(item['price'].toString() + "\n"), // 메뉴 가격
+                Image.network(item['photo'].toString()),
+              ],
+            ),
+          ));
+        } else {
+          myMenuList.add(Container(
+            height: 400,
+            child: Row(
+              children: <Widget>[
+                Text(item['name'] + "\n"), // 메뉴 이름
+                Text(item['price'].toString() + "\n"), // 메뉴 가격
+                Text("메뉴 사진 없음" + "\n"),
+              ],
+            ),
+          ));
+        }
       }
       return Container(
         height: 900,
@@ -192,7 +204,7 @@ class customer_mainState extends State<customer_main> {
     Map<String, dynamic> responseMap = jsonDecode(jsMessage.message);
     var user = storeInfo.fromJson(responseMap);
     List<Widget> _storeImageWidgetList = [];
-    List<Map<String, dynamic>> Menus = [];
+    List<dynamic> Menus = [];
     var store_Photos = user.store_photo;
     Menus = user.menu_info!;
 
@@ -201,7 +213,7 @@ class customer_mainState extends State<customer_main> {
         _storeImageWidgetList.add(
           Row(
             children: <Widget>[
-              Image.network(item),
+              //Image.network(item),
               SizedBox(
                 height: 30,
               ),
@@ -252,20 +264,20 @@ class customer_mainState extends State<customer_main> {
                     height: 30,
                   ),
                   Text('메뉴 정보', style: TextStyle(fontSize: 24)),
-                  Text('${user.menu_info}', style: TextStyle(fontSize: 18)),
+                  Container(
+                    child: buildMyMenu(context, Menus),
+                  ),
                   SizedBox(
                     height: 30,
                   ),
                   Text('가게 사진', style: TextStyle(fontSize: 24)),
-                  Text('${user.store_photo}', style: TextStyle(fontSize: 18)),
+                  Image.network('${user.store_photo![1]}'),
+                  //Text('${user.store_photo}', style: TextStyle(fontSize: 18)),
                   Container(
                     // 가게 사진 보여주는 부분
                     child: Row(
                       children: _storeImageWidgetList,
                     ),
-                  ),
-                  Container(
-                    child: buildMyMenu(context, Menus),
                   ),
                 ],
               ),

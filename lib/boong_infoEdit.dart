@@ -25,6 +25,9 @@ class MyApp extends StatelessWidget {
   }
 }
 
+// 기존 데이터를 불러온 뒤 저장하기 위한 전역변수.
+GetStoreInfo? initStoreInfo;
+
 class SetStoreInfo {
   String? error;
   bool? ok;
@@ -132,7 +135,6 @@ class infoEditState extends State<infoEdit> {
   }
 
   final TextEditingController controller = TextEditingController();
-// fetchGetStoreInfo 함수 생성 예정.
 
   Future<GetStoreInfo> fetchGetStoreInfo(String id) async {
     final msg = jsonEncode({"id": id});
@@ -155,6 +157,7 @@ class infoEditState extends State<infoEdit> {
 
         ScaffoldMessenger.of(context).showSnackBar(_logoutSnackBar);
 
+        initStoreInfo = GetStoreInfo.fromJson(json.decode(response.body));
         Navigator.pop(context);
       }
       return GetStoreInfo.fromJson(json.decode(response.body));
