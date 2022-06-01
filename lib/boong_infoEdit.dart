@@ -17,7 +17,7 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: '내 가게 정보',
       home: infoEdit("", ""),
@@ -101,6 +101,40 @@ class infoEdit extends StatefulWidget {
   infoEditState createState() => infoEditState();
 }
 
+class storeCotroller extends GetxController {
+  String storeName = "";
+  String category = "";
+  List<File> image = <File>[];
+  String storeInfo = "";
+  int aa = 0;
+
+  void categoryInfoAdd(String a) {
+    category = a;
+    update();
+  }
+  void storeNameAdd(String a) {
+    storeName = a;
+    update();
+  }
+  void storeInfoAdd(String a) {
+    storeInfo = a;
+    update();
+  }
+  void imageAdd(File a) {
+    image.add(a);
+    update();
+  }
+  List<File> images() {
+    return image;
+  }
+  void plusA() {
+    aa++;
+    update();
+  }
+
+
+}
+
 class infoEditState extends State<infoEdit> {
   String name = "";
   static List<String> entries = <String>[];
@@ -109,12 +143,24 @@ class infoEditState extends State<infoEdit> {
   List<String> enc_images = <String>[];
   int a = 0;
 
+
+
   // 가게 이름, 가게 설명, 영업 시간, 메뉴명 및 가격에 접근하기 위한 컨트롤러 선언
   TextEditingController _Store_Name_Controller = TextEditingController();
   TextEditingController _Store_Desc_Controller = TextEditingController();
   TextEditingController _Store_Time_Controller = TextEditingController();
   TextEditingController _Store_Menu_Controller = TextEditingController();
   TextEditingController _Store_Cate_Controller = TextEditingController();
+
+  @override
+  void initState() {
+    final con = Get.put(storeCotroller());
+    super.initState();
+
+    _Store_Name_Controller.text = con.storeName;
+    _Store_Cate_Controller.text = con.category;
+    _Store_Desc_Controller.text = con.storeInfo;
+  }
 
   void _setImage() async {
     var picker = ImagePicker();
@@ -125,11 +171,15 @@ class infoEditState extends State<infoEdit> {
         userImage = File(image.path);
         images.add(userImage);
 
+        final con = Get.put(storeCotroller());
+        con.imageAdd(userImage);
+
+
         // 이미지 base64 인코딩
         final bytes = userImage.readAsBytesSync();
         enc_images.add(base64Encode(bytes));
 
-        a++;
+        con.plusA();
       });
     }
   }
@@ -231,6 +281,7 @@ class infoEditState extends State<infoEdit> {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(storeCotroller());
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -258,6 +309,11 @@ class infoEditState extends State<infoEdit> {
               Container(
                 margin: EdgeInsets.all(10.0),
                 child: TextField(
+                  onChanged: (text) {
+                    setState(() {
+                      controller.storeNameAdd(_Store_Name_Controller.text);
+                    });
+                  },
                   controller: _Store_Name_Controller,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
@@ -273,16 +329,22 @@ class infoEditState extends State<infoEdit> {
               Container(
                 margin: EdgeInsets.all(10.0),
                 child: TextField(
+                  onChanged: (text) {
+                    setState(() {
+                      controller.categoryInfoAdd(_Store_Cate_Controller.text);
+                    });
+                  },
                   controller: _Store_Cate_Controller,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(6.0)),
                     ),
                   ),
+
                 ),
               ),
               Text(
-                "가게 사진 (" + '$a' + "/99)",
+                "가게 사진 (" + '${controller.aa}' + "/99)",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               Container(
@@ -292,13 +354,13 @@ class infoEditState extends State<infoEdit> {
                     Flexible(
                       child: ListView.builder(
                         shrinkWrap: true,
-                        itemCount: images.length,
+                        itemCount: controller.images().length,
                         itemBuilder: (BuildContext context, int index) {
                           return Container(
                             color: Colors.grey,
                             child: Center(
                               child: Image(
-                                image: FileImage(images[index]),
+                                image: FileImage(controller.images()[index]),
                               ), // 사진 업로드 체크용. 이후 갤러리 열어서 사진 넘기는 쪽으로 수정 예정
                             ),
                           );
@@ -333,6 +395,11 @@ class infoEditState extends State<infoEdit> {
                     child: Divider(color: Colors.black, thickness: 1.0),
                   ),
                   TextField(
+                    onChanged: (text) {
+                      setState(() {
+                        controller.storeInfoAdd(_Store_Desc_Controller.text);
+                      });
+                    },
                     controller: _Store_Desc_Controller,
                     keyboardType: TextInputType.multiline,
                     maxLines: 5,
@@ -366,6 +433,7 @@ class infoEditState extends State<infoEdit> {
                   ),
                   ElevatedButton(
                     onPressed: () async {
+
                       final returnData = await Navigator.push(context,
                           MaterialPageRoute(builder: (context) => timeEdit()));
                       if (returnData != null) {

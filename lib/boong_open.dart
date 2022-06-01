@@ -59,7 +59,7 @@ class boong_mainState extends State<boong_open> {
   WebViewController? controller;
 
   void _getNowLocation() async {
-    /*
+
     LocationPermission permission = await Geolocator.requestPermission();
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
@@ -70,12 +70,12 @@ class boong_mainState extends State<boong_open> {
 
     _lat = position.latitude;
     _lng = position.longitude;
-    -> 2022.05.30 진건승 : Location Service가 허용된 장치에서만 주석해제하고 실행.
-       이 경우 하단의 코드는 주석처리 부탁.
-    */
+    //-> 2022.05.30 진건승 : Location Service가 허용된 장치에서만 주석해제하고 실행.
+    //   이 경우 하단의 코드는 주석처리 부탁.
 
-    controller!.runJavascript(
-        'setinitMap(36.366522, 127.344574);setMarker(36.366522, 127.344574)');
+
+    //controller!.runJavascript(
+    //    'setinitMap(36.366522, 127.344574);setMarker(36.366522, 127.344574)');
   }
 
   @override
