@@ -165,31 +165,37 @@ class customer_mainState extends State<customer_main> {
         if (item['photo'] != null) {
           // Photo가 있는 경우
           myMenuList.add(Container(
-            height: 800,
-            child: Row(
+            //height: 600,
+            child: Column(
               children: <Widget>[
                 Text(item['name'] + "\n"), // 메뉴 이름
                 Text(item['price'].toString() + "\n"), // 메뉴 가격
                 Image.network(item['photo'].toString()),
+                SizedBox(
+                  height: 30,
+                ),
               ],
             ),
           ));
         } else {
           myMenuList.add(Container(
-            height: 400,
-            child: Row(
+            //height: 600,
+            child: Column(
               children: <Widget>[
                 Text(item['name'] + "\n"), // 메뉴 이름
                 Text(item['price'].toString() + "\n"), // 메뉴 가격
                 Text("메뉴 사진 없음" + "\n"),
+                SizedBox(
+                  height: 30,
+                ),
               ],
             ),
           ));
         }
       }
       return Container(
-        height: 900,
-        child: Row(
+        //height: 1200,
+        child: Column(
           children: myMenuList,
         ),
       );
@@ -264,6 +270,9 @@ class customer_mainState extends State<customer_main> {
                     height: 30,
                   ),
                   Text('메뉴 정보', style: TextStyle(fontSize: 24)),
+                  SizedBox(
+                    height: 30,
+                  ),
                   Container(
                     child: buildMyMenu(context, Menus),
                   ),
@@ -271,6 +280,9 @@ class customer_mainState extends State<customer_main> {
                     height: 30,
                   ),
                   Text('가게 사진', style: TextStyle(fontSize: 24)),
+                  SizedBox(
+                    height: 30,
+                  ),
                   Image.network('${user.store_photo![1]}'),
                   //Text('${user.store_photo}', style: TextStyle(fontSize: 18)),
                   Container(
