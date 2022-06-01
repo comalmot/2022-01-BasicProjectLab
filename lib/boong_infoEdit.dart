@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: '내 가게 정보',
-      home: infoEdit("", ""),
+      home: infoEdit("", "", "", "", "", "", null),
     );
   }
 }
@@ -96,7 +96,24 @@ class GetStoreInfo {
 class infoEdit extends StatefulWidget {
   final String token;
   final String id;
-  const infoEdit(this.token, this.id);
+  // 2022.06.01 진건승.
+  // 가게 이름, 가게 설명, 사진을 GetX로 하려다가, 이미 Routes가 GetX 기반으로 되어있지 않아 개발이 꼬일 것 같아서 GetX 사용 안함.
+  final String saveState_storeName; // 가게 이름
+  final String saveState_storeDesc; // 가게 설명
+  final String saveState_storeTime; // 운영 시간
+  final String saveState_storeCate; // 가게 카테고리
+  final List<File>? saveState_storeImages; // 가게 이미지
+
+  //final List<File> saveState_menuImages;
+
+  const infoEdit(
+      this.token,
+      this.id,
+      this.saveState_storeName,
+      this.saveState_storeDesc,
+      this.saveState_storeTime,
+      this.saveState_storeCate,
+      this.saveState_storeImages);
   @override
   infoEditState createState() => infoEditState();
 }
@@ -133,8 +150,6 @@ class infoEditState extends State<infoEdit> {
       });
     }
   }
-
-  final TextEditingController controller = TextEditingController();
 
   Future<GetStoreInfo> fetchGetStoreInfo(String id) async {
     final msg = jsonEncode({"id": id});
@@ -258,6 +273,9 @@ class infoEditState extends State<infoEdit> {
               Container(
                 margin: EdgeInsets.all(10.0),
                 child: TextField(
+                  onSubmitted: ((value) {
+                    //widget.saveState_storeName = _Store_Name_Controller.text;
+                  }),
                   controller: _Store_Name_Controller,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
@@ -310,9 +328,16 @@ class infoEditState extends State<infoEdit> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  setState(() {
-                    _setImage();
-                  });
+                  if (this.mounted) {
+                    setState(() {
+                      _setImage();
+                      //widget.token,
+                      //widget.id,
+                      _Store_Name_Controller.text = widget.saveState_storeName;
+                      _Store_Desc_Controller.text = widget.saveState_storeDesc;
+                      _Store_Cate_Controller.text = widget.saveState_storeCate;
+                    });
+                  }
                 },
                 style: ButtonStyle(
                     textStyle: MaterialStateProperty.all(
@@ -378,8 +403,14 @@ class infoEditState extends State<infoEdit> {
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  infoEdit(widget.token, widget.id)),
+                              builder: (context) => infoEdit(
+                                  widget.token,
+                                  widget.id,
+                                  widget.saveState_storeName,
+                                  widget.saveState_storeDesc,
+                                  widget.saveState_storeTime,
+                                  widget.saveState_storeCate,
+                                  widget.saveState_storeImages)),
                           (Route<dynamic> route) => false,
                         );
                       }
@@ -431,8 +462,14 @@ class infoEditState extends State<infoEdit> {
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  infoEdit(widget.token, widget.id)),
+                              builder: (context) => infoEdit(
+                                  widget.token,
+                                  widget.id,
+                                  widget.saveState_storeName,
+                                  widget.saveState_storeDesc,
+                                  widget.saveState_storeTime,
+                                  widget.saveState_storeCate,
+                                  widget.saveState_storeImages)),
                           (Route<dynamic> route) => false,
                         );
                       }

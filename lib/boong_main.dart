@@ -195,8 +195,14 @@ class boong_mainState extends State<boong_main> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  infoEdit(widget.token, widget.id)));
+                              builder: (BuildContext context) => infoEdit(
+                                  widget.token,
+                                  widget.id,
+                                  "",
+                                  "",
+                                  "",
+                                  "",
+                                  null)));
                     },
                     style: ButtonStyle(
                       textStyle: MaterialStateProperty.all(
