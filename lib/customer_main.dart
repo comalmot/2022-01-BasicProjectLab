@@ -1,6 +1,9 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:our_town_boongsaegwon/searchStore.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'boong_infoEdit.dart';
@@ -91,7 +94,6 @@ class customer_mainState extends State<customer_main> {
   GlobalKey<ScaffoldState> _BottomdrawerKey = GlobalKey();
 
   void _getNowLocation() async {
-
     LocationPermission permission = await Geolocator.requestPermission();
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
@@ -100,7 +102,6 @@ class customer_mainState extends State<customer_main> {
           //'setMarker(${position.latitude},${position.longitude})'
           'setinitMap(${position.latitude},${position.longitude});getAllLocations();');
     }
-
 
     //controller!
     //    .runJavascript('setinitMap(36.366522, 127.344574);getAllLocations();');
@@ -444,24 +445,68 @@ class customer_mainState extends State<customer_main> {
           ],
         ),
       ),
-      body: SafeArea(
-        child: ClipRect(
-            child: Transform.scale(
-          scale: ratio,
-          child: WebView(
-            initialUrl: "http://boongsaegwon.kro.kr",
-            onWebViewCreated: (controller) {
-              this.controller = controller;
-            },
-            javascriptChannels: <JavascriptChannel>{
-              _markerClicked(context),
-            },
-            javascriptMode: JavascriptMode.unrestricted,
-            onPageFinished: (String url) {
-              _getNowLocation();
-            },
-          ),
-        )),
+      body: Container(
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.fromLTRB(20, 20, 0, 0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                    alignment: Alignment.topLeft,
+                    height: 80,
+                    width: 350,
+                    child: TextField(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(6.0)),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                      alignment: Alignment.topLeft,
+                      height: 100,
+                      child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        searchStore()));
+                          },
+                          child: Icon(
+                            Icons.search,
+                            size: 30.0,
+                          ))),
+                ],
+              ),
+            ),
+            Container(
+              height: 800,
+              child: SafeArea(
+                child: ClipRect(
+                    child: Transform.scale(
+                  scale: ratio,
+                  child: WebView(
+                    initialUrl: "http://boongsaegwon.kro.kr",
+                    onWebViewCreated: (controller) {
+                      this.controller = controller;
+                    },
+                    javascriptChannels: <JavascriptChannel>{
+                      _markerClicked(context),
+                    },
+                    javascriptMode: JavascriptMode.unrestricted,
+                    onPageFinished: (String url) {
+                      _getNowLocation();
+                    },
+                  ),
+                )),
+              ),
+            ),
+          ],
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
