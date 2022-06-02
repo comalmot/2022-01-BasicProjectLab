@@ -76,7 +76,8 @@ class boong_mainState extends State<boong_main> {
 
         ScaffoldMessenger.of(context).showSnackBar(_logoutSnackBar);
 
-        Navigator.pop(context);
+        Navigator.push(context,
+            MaterialPageRoute(builder: (BuildContext context) => MyEditText()));
       }
       return logout.fromJson(json.decode(response.body));
     } else {
@@ -103,10 +104,6 @@ class boong_mainState extends State<boong_main> {
                       isTrue = false;
                     });
                     fetchLogout(widget.id);
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (BuildContext context) => MyEditText()));
                   },
                   child: const Text(
                     'Yes',
@@ -196,13 +193,9 @@ class boong_mainState extends State<boong_main> {
                           context,
                           MaterialPageRoute(
                               builder: (BuildContext context) => infoEdit(
-                                  widget.token,
-                                  widget.id,
-                                  "",
-                                  "",
-                                  "",
-                                  "",
-                                  null)));
+                                    widget.token,
+                                    widget.id,
+                                  )));
                     },
                     style: ButtonStyle(
                       textStyle: MaterialStateProperty.all(

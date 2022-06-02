@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:our_town_boongsaegwon/boong_info.dart';
+import 'package:our_town_boongsaegwon/boong_main.dart';
+import 'package:our_town_boongsaegwon/customer_main.dart';
 import 'boong_menuEdit.dart';
 import 'dart:io';
 import 'boong_timeEdit.dart';
@@ -20,13 +23,14 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: '내 가게 정보',
-      home: infoEdit("", "", "", "", "", "", null),
+      home: infoEdit("", ""),
     );
   }
 }
 
 // 기존 데이터를 불러온 뒤 저장하기 위한 전역변수.
 GetStoreInfo? initStoreInfo;
+Future<GetStoreInfo>? myFuture;
 
 class SetStoreInfo {
   String? error;
@@ -50,13 +54,13 @@ class SetStoreInfo {
 class GetStoreInfo {
   String category = "";
   String? error;
-  List<Map<String, dynamic>>? menu_info;
+  List<dynamic>? menu_info;
   String name = "";
   bool ok = false;
   String? store_description;
   String store_name = "";
-  List<String>? store_open_info;
-  List<String>? store_photo;
+  List<dynamic>? store_open_info;
+  List<dynamic>? store_photo;
 
   GetStoreInfo(
       this.category,
@@ -98,85 +102,128 @@ class infoEdit extends StatefulWidget {
   final String id;
   // 2022.06.01 진건승.
   // 가게 이름, 가게 설명, 사진을 GetX로 하려다가, 이미 Routes가 GetX 기반으로 되어있지 않아 개발이 꼬일 것 같아서 GetX 사용 안함.
-  final String saveState_storeName; // 가게 이름
-  final String saveState_storeDesc; // 가게 설명
-  final String saveState_storeTime; // 운영 시간
-  final String saveState_storeCate; // 가게 카테고리
-  final List<File>? saveState_storeImages; // 가게 이미지
-
   //final List<File> saveState_menuImages;
 
   const infoEdit(
-      this.token,
-      this.id,
-      this.saveState_storeName,
-      this.saveState_storeDesc,
-      this.saveState_storeTime,
-      this.saveState_storeCate,
-      this.saveState_storeImages);
+    this.token,
+    this.id,
+  );
+
   @override
   infoEditState createState() => infoEditState();
 }
 
 class storeCotroller extends GetxController {
+  bool isNotFirst = false;
   String storeName = "";
   String category = "";
   List<File> image = <File>[];
   String storeInfo = "";
+  List<String> storeTime = []; // for display
+  List<Map<String, dynamic>> storeMenu = []; // for display
+  List<String> storeImgs = [];
+
   int aa = 0;
 
   void categoryInfoAdd(String a) {
     category = a;
     update();
   }
+
   void storeNameAdd(String a) {
     storeName = a;
     update();
   }
+
   void storeInfoAdd(String a) {
     storeInfo = a;
     update();
   }
+
+  void storeTimeAdd(List<String> a) {
+    storeTime = a;
+    update();
+  }
+
+  void storeMenuAdd(List<Map<String, dynamic>> a) {
+    storeMenu = a;
+    update();
+  }
+
   void imageAdd(File a) {
     image.add(a);
     update();
   }
+
   List<File> images() {
     return image;
   }
+
   void plusA() {
     aa++;
     update();
   }
 
-
+  void First() {
+    isNotFirst = true;
+    update();
+  }
 }
 
 class infoEditState extends State<infoEdit> {
   String name = "";
-  static List<String> entries = <String>[];
-  static List<Map<String, dynamic>> menus = [];
+  List<String> entries = <String>[];
+  List<Map<String, dynamic>> menus = [];
   List<File> images = <File>[];
   List<String> enc_images = <String>[];
   int a = 0;
-
-
-
   // 가게 이름, 가게 설명, 영업 시간, 메뉴명 및 가격에 접근하기 위한 컨트롤러 선언
   TextEditingController _Store_Name_Controller = TextEditingController();
   TextEditingController _Store_Desc_Controller = TextEditingController();
   TextEditingController _Store_Time_Controller = TextEditingController();
   TextEditingController _Store_Menu_Controller = TextEditingController();
   TextEditingController _Store_Cate_Controller = TextEditingController();
+  final controller = Get.put(storeCotroller());
 
   @override
   void initState() {
     final con = Get.put(storeCotroller());
     super.initState();
 
-    _Store_Name_Controller.text = con.storeName;
-    _Store_Cate_Controller.text = con.category;
-    _Store_Desc_Controller.text = con.storeInfo;
+    myFuture = fetchGetStoreInfo(widget.id);
+
+    myFuture!.then((value) {
+      setState(() {
+        if (controller.isNotFirst == false) {
+          List<String> StoreTimeArgs = [];
+
+          for (var item in value.store_open_info!) {
+            StoreTimeArgs.add("${item}");
+          }
+
+          List<Map<String, dynamic>> StoreMenuArgs = [];
+          for (var item in value.menu_info!) {
+            //StoreMenuArgs.add("메뉴명 : ${item['name']}  가격 : ${item['price']}원");
+            StoreMenuArgs.add(item);
+          }
+
+          List<String> StoreImgArgs = [];
+          for (var item in value.store_photo!) {
+            controller.storeImgs.add(item);
+          }
+          controller.storeNameAdd(value.store_name);
+          controller.storeInfoAdd(value.store_description!);
+          controller.categoryInfoAdd(value.category);
+          _Store_Name_Controller.text = controller.storeName;
+          _Store_Cate_Controller.text = controller.category;
+          _Store_Desc_Controller.text = controller.storeInfo;
+          controller.storeTimeAdd(StoreTimeArgs);
+          controller.storeMenuAdd(StoreMenuArgs);
+
+          controller.First();
+        }
+      });
+    });
   }
 
   void _setImage() async {
@@ -191,10 +238,9 @@ class infoEditState extends State<infoEdit> {
         final con = Get.put(storeCotroller());
         con.imageAdd(userImage);
 
-
         // 이미지 base64 인코딩
         final bytes = userImage.readAsBytesSync();
-        enc_images.add(base64Encode(bytes));
+        controller.storeImgs.add(base64Encode(bytes));
 
         con.plusA();
       });
@@ -217,18 +263,17 @@ class infoEditState extends State<infoEdit> {
 
       if (GetStoreInfo.fromJson(json.decode(response.body)).ok == true) {
         final _logoutSnackBar = SnackBar(
-          content: Text("로그아웃 성공."),
+          content: Text("가게 정보 로드 성공."),
         );
 
         ScaffoldMessenger.of(context).showSnackBar(_logoutSnackBar);
 
         initStoreInfo = GetStoreInfo.fromJson(json.decode(response.body));
-        Navigator.pop(context);
       }
       return GetStoreInfo.fromJson(json.decode(response.body));
     } else {
       final _logoutSnackBar = SnackBar(
-        content: Text("로그아웃 실패."),
+        content: Text("가게 정보 로드 실패."),
       );
 
       ScaffoldMessenger.of(context).showSnackBar(_logoutSnackBar);
@@ -296,7 +341,9 @@ class infoEditState extends State<infoEdit> {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(storeCotroller());
+    _Store_Name_Controller.text = controller.storeName;
+    _Store_Cate_Controller.text = controller.category;
+    _Store_Desc_Controller.text = controller.storeInfo;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -324,17 +371,15 @@ class infoEditState extends State<infoEdit> {
               Container(
                 margin: EdgeInsets.all(10.0),
                 child: TextField(
-<<<<<<< HEAD
                   onChanged: (text) {
                     setState(() {
                       controller.storeNameAdd(_Store_Name_Controller.text);
+                      //_Store_Name_Controller.text = controller.storeName;
                     });
                   },
-=======
                   onSubmitted: ((value) {
                     //widget.saveState_storeName = _Store_Name_Controller.text;
                   }),
->>>>>>> eb01424d38ff19fdd3baa7b7de5176ef6d46bb4a
                   controller: _Store_Name_Controller,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
@@ -361,7 +406,6 @@ class infoEditState extends State<infoEdit> {
                       borderRadius: BorderRadius.all(Radius.circular(6.0)),
                     ),
                   ),
-
                 ),
               ),
               Text(
@@ -393,16 +437,9 @@ class infoEditState extends State<infoEdit> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  if (this.mounted) {
-                    setState(() {
-                      _setImage();
-                      //widget.token,
-                      //widget.id,
-                      _Store_Name_Controller.text = widget.saveState_storeName;
-                      _Store_Desc_Controller.text = widget.saveState_storeDesc;
-                      _Store_Cate_Controller.text = widget.saveState_storeCate;
-                    });
-                  }
+                  setState(() {
+                    _setImage();
+                  });
                 },
                 style: ButtonStyle(
                     textStyle: MaterialStateProperty.all(
@@ -447,13 +484,13 @@ class infoEditState extends State<infoEdit> {
                   ),
                   ListView.separated(
                     shrinkWrap: true,
-                    itemCount: entries.length,
+                    itemCount: controller.storeTime.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Container(
                           height: 50,
                           color: Colors.black26,
                           child: Center(
-                            child: Text(entries[index]),
+                            child: Text(controller.storeTime[index]),
                           ));
                     },
                     separatorBuilder: (BuildContext context, int index) =>
@@ -461,12 +498,13 @@ class infoEditState extends State<infoEdit> {
                   ),
                   ElevatedButton(
                     onPressed: () async {
-
                       final returnData = await Navigator.push(context,
                           MaterialPageRoute(builder: (context) => timeEdit()));
+
                       if (returnData != null) {
                         int i = timeEditState.returnData.length;
-                        entries.add(timeEditState.returnData[i - 1]);
+                        controller.storeTime
+                            .add(timeEditState.returnData[i - 1]);
 
                         print("modified: $returnData");
                         //print("modified: $entries");
@@ -475,13 +513,9 @@ class infoEditState extends State<infoEdit> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => infoEdit(
-                                  widget.token,
-                                  widget.id,
-                                  widget.saveState_storeName,
-                                  widget.saveState_storeDesc,
-                                  widget.saveState_storeTime,
-                                  widget.saveState_storeCate,
-                                  widget.saveState_storeImages)),
+                                    widget.token,
+                                    widget.id,
+                                  )),
                           (Route<dynamic> route) => false,
                         );
                       }
@@ -502,15 +536,14 @@ class infoEditState extends State<infoEdit> {
                   ),
                   ListView.separated(
                     shrinkWrap: true,
-                    itemCount: menus.length,
+                    itemCount: controller.storeMenu.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Container(
                           height: 50,
                           color: Colors.black26,
                           child: Center(
-                            child: Text(menus[index]['name'] +
-                                '     ' +
-                                menus[index]['price']),
+                            child: Text(
+                                '메뉴 : ${controller.storeMenu[index]['name']} 가격 : ${controller.storeMenu[index]['price']}원'),
                           ));
                     },
                     separatorBuilder: (BuildContext context, int index) =>
@@ -526,7 +559,7 @@ class infoEditState extends State<infoEdit> {
                         print(returnData);
 
                         String MainMapKeyTemp = i.toString();
-                        menus.add(returnData);
+                        controller.storeMenu.add(returnData);
 
                         print("modified: $returnData");
                         // 화면 새로고침
@@ -534,13 +567,9 @@ class infoEditState extends State<infoEdit> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => infoEdit(
-                                  widget.token,
-                                  widget.id,
-                                  widget.saveState_storeName,
-                                  widget.saveState_storeDesc,
-                                  widget.saveState_storeTime,
-                                  widget.saveState_storeCate,
-                                  widget.saveState_storeImages)),
+                                    widget.token,
+                                    widget.id,
+                                  )),
                           (Route<dynamic> route) => false,
                         );
                       }
@@ -571,10 +600,14 @@ class infoEditState extends State<infoEdit> {
                           _Store_Name_Controller.text,
                           _Store_Cate_Controller.text,
                           _Store_Desc_Controller.text,
-                          entries,
-                          enc_images,
-                          menus);
-                      Navigator.pop(context);
+                          controller.storeTime,
+                          controller.storeImgs,
+                          controller.storeMenu);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  boong_main(widget.token, widget.id)));
                     },
                     style: ButtonStyle(
                         textStyle: MaterialStateProperty.all(
