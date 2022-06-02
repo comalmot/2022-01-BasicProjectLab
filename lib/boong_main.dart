@@ -160,7 +160,7 @@ class boong_mainState extends State<boong_main> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 Text(
-                  '$name' + ' 님 안녕하세요!',
+                  '${widget.id}' + ' 님 안녕하세요!',
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 30),
                 ),

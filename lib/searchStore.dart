@@ -11,12 +11,15 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: '검색',
-      home: searchStore(),
+      home: searchStore("타코"),
     );
   }
 }
 
 class searchStore extends StatefulWidget {
+  final String searchText;
+  const searchStore(this.searchText);
+
   @override
   searchStoreState createState() => searchStoreState();
 }
@@ -27,6 +30,22 @@ class searchStoreState extends State<searchStore> {
   List<String> storeName = [];
   List<String> storeLocation = [];
   List<String> storeDistance = [];
+  @override
+  void initState() {
+    super.initState();
+    storeName.clear();
+    storeLocation.clear();
+    storeDistance.clear();
+    storeName.add("소봉타코");
+    storeLocation.add("유성구 어은동 한빛아파트 앞");
+    storeDistance.add("0.4 km");
+    storeName.add("타코머코");
+    storeLocation.add("유성구 노은동 노은역 앞");
+    storeDistance.add("2.3 km");
+    storeName.add("애기타코");
+    storeLocation.add("유성구 도안동 센트럴정류장 앞");
+    storeDistance.add("3.4 km");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,27 +94,7 @@ class searchStoreState extends State<searchStore> {
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: <Widget>[
                               ElevatedButton(
-                                onPressed: () {
-                                  storeName.clear();
-                                  storeLocation.clear();
-                                  storeDistance.clear();
-                                  storeName.add("소봉타코");
-                                  storeLocation.add("유성구 어은동 한빛아파트 앞");
-                                  storeDistance.add("0.4 km");
-                                  storeName.add("타코머코");
-                                  storeLocation.add("유성구 노은동 노은역 앞");
-                                  storeDistance.add("2.3 km");
-                                  storeName.add("애기타코");
-                                  storeLocation.add("유성구 도안동 센트럴정류장 앞");
-                                  storeDistance.add("3.4 km");
-                                  // 화면 새로고침
-                                  Navigator.pushAndRemoveUntil(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => searchStore()),
-                                    (Route<dynamic> route) => false,
-                                  );
-                                },
+                                onPressed: () {},
                                 style: ElevatedButton.styleFrom(
                                     primary: Colors.black26,
                                     fixedSize: Size.fromHeight(50)),

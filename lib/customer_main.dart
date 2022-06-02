@@ -251,16 +251,18 @@ class customer_mainState extends State<customer_main> {
 
     if (store_Photos != null) {
       for (var item in store_Photos) {
-        _storeImageWidgetList.add(
-          Row(
-            children: <Widget>[
-              Image.network(item),
-              SizedBox(
-                height: 30,
-              ),
-            ],
-          ),
-        );
+        if (item.toString().contains("http")) {
+          _storeImageWidgetList.add(
+            Row(
+              children: <Widget>[
+                Image.network(item),
+                SizedBox(
+                  height: 30,
+                ),
+              ],
+            ),
+          );
+        }
       }
     }
 
@@ -328,7 +330,9 @@ class customer_mainState extends State<customer_main> {
                         alignment: Alignment.center,
                         widthFactor: 0.5,
                         heightFactor: 0.5,
-                        child: Image.network('${user.store_photo![1]}'),
+                        child: Column(
+                          children: _storeImageWidgetList,
+                        ),
                       ),
                     ),
                   ),
@@ -451,35 +455,53 @@ class customer_mainState extends State<customer_main> {
             Padding(
               padding: EdgeInsets.fromLTRB(20, 20, 0, 0),
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
                   Container(
-                    alignment: Alignment.topLeft,
-                    height: 80,
-                    width: 350,
+                    width: 305,
+                    height: 50,
+                    margin: const EdgeInsets.fromLTRB(0, 0, 7, 10),
                     child: TextField(
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(6.0)),
-                        ),
-                      ),
+                      decoration: const InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10.0)),
+                            borderSide:
+                                BorderSide(width: 1, color: Colors.black),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10.0)),
+                            borderSide:
+                                BorderSide(width: 1, color: Colors.grey),
+                          ),
+                          hintText: "검색어를 입력하세요."),
                     ),
                   ),
                   Container(
-                      alignment: Alignment.topLeft,
-                      height: 100,
-                      child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        searchStore()));
-                          },
-                          child: Icon(
-                            Icons.search,
-                            size: 30.0,
-                          ))),
+                      width: 60,
+                      height: 50,
+                      margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                          ElevatedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            searchStore("타코")));
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  primary: Colors.black26,
+                                  fixedSize: Size.fromHeight(50)),
+                              child: Icon(
+                                Icons.search,
+                                size: 30.0,
+                              ))
+                        ],
+                      )),
                 ],
               ),
             ),
