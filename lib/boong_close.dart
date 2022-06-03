@@ -69,7 +69,7 @@ class boong_closeState extends State<boong_close> {
         );
 
         ScaffoldMessenger.of(context).showSnackBar(_loginSnackBar);
-
+        Navigator.of(context).pop();
         Navigator.push(
             context,
             MaterialPageRoute(
