@@ -55,7 +55,7 @@ class boong_closeState extends State<boong_close> {
         await http.post(Uri.parse('http://boongsaegwon.kro.kr/set_location'),
             headers: {
               'Content-Type': 'application/json; charset=UTF-8',
-              HttpHeaders.authorizationHeader: widget.token,
+              HttpHeaders.authorizationHeader: 'Bearer ${widget.token}',
             },
             body: msg);
 
