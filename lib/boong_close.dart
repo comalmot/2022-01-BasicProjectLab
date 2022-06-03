@@ -73,7 +73,8 @@ class boong_closeState extends State<boong_close> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (BuildContext context) => boong_main("", "")));
+                builder: (BuildContext context) =>
+                    boong_main(widget.token, widget.id)));
       }
       return LocationInfo.fromJson(json.decode(response.body));
     } else {
