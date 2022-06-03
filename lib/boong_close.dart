@@ -70,7 +70,10 @@ class boong_closeState extends State<boong_close> {
 
         ScaffoldMessenger.of(context).showSnackBar(_loginSnackBar);
 
-        Navigator.pop(context);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (BuildContext context) => boong_main("", "")));
       }
       return LocationInfo.fromJson(json.decode(response.body));
     } else {
@@ -98,12 +101,6 @@ class boong_closeState extends State<boong_close> {
                     });
 
                     fetchLocation(widget.id, widget.lat, widget.lng);
-
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                                boong_main("", "")));
                   },
                   child: const Text(
                     'Yes',
