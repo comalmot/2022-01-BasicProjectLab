@@ -225,7 +225,9 @@ class customer_mainState extends State<customer_main> {
         myStoreInfoList.add(
           Column(
             children: <Widget>[
-              Text("${item}"),
+              Text("${item.toString().split(" ")[0] + ", " + item.toString().split(" ")[1] + ", " + item.toString().split(" ")[2]}",
+                    style: TextStyle(fontSize: 14, fontFamily: 'NanumLarge'),),
+              //Text("${item}"),   //에러 발생시 해당 줄 주석 사용 및 윗줄 주석 달기
               SizedBox(
                 height: 30,
               )
@@ -283,18 +285,18 @@ class customer_mainState extends State<customer_main> {
                 children: <Widget>[
                   Text(
                     '카테고리',
-                    style: TextStyle(fontSize: 24),
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, fontFamily: 'NanumLarge'),
                   ),
-                  Text('${user.category}', style: TextStyle(fontSize: 18)),
+                  Text('${user.category}', style: TextStyle(fontSize: 18, fontFamily: 'NanumRegular')),
                   SizedBox(
                     height: 30,
                   ),
-                  Text('가게이름', style: TextStyle(fontSize: 24)),
-                  Text('${user.store_name}', style: TextStyle(fontSize: 18)),
+                  Text('가게이름', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, fontFamily: 'NanumLarge')),
+                  Text('${user.store_name}', style: TextStyle(fontSize: 18, fontFamily: 'NanumLarge')),
                   SizedBox(
                     height: 30,
                   ),
-                  Text('현재 운영 여부 및 운영 시간', style: TextStyle(fontSize: 24)),
+                  Text('현재 운영 여부 및 운영 시간', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, fontFamily: 'NanumLarge')),
                   SizedBox(
                     height: 30,
                   ),
@@ -304,13 +306,13 @@ class customer_mainState extends State<customer_main> {
                   SizedBox(
                     height: 30,
                   ),
-                  Text('가게 정보', style: TextStyle(fontSize: 24)),
+                  Text('가게 정보', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, fontFamily: 'NanumLarge')),
                   Text('${user.store_description}',
-                      style: TextStyle(fontSize: 18)),
+                      style: TextStyle(fontSize: 18, fontFamily: 'NanumLarge')),
                   SizedBox(
                     height: 30,
                   ),
-                  Text('메뉴 정보', style: TextStyle(fontSize: 24)),
+                  Text('메뉴 정보', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, fontFamily: 'NanumLarge')),
                   SizedBox(
                     height: 30,
                   ),
@@ -320,7 +322,7 @@ class customer_mainState extends State<customer_main> {
                   SizedBox(
                     height: 30,
                   ),
-                  Text('가게 사진', style: TextStyle(fontSize: 24)),
+                  Text('가게 사진', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, fontFamily: 'NanumLarge')),
                   SizedBox(
                     height: 30,
                   ),
@@ -450,84 +452,88 @@ class customer_mainState extends State<customer_main> {
         ),
       ),
       body: Container(
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.fromLTRB(20, 20, 0, 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Container(
-                    width: 305,
-                    height: 50,
-                    margin: const EdgeInsets.fromLTRB(0, 0, 7, 10),
-                    child: TextField(
-                      decoration: const InputDecoration(
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            borderSide:
-                                BorderSide(width: 1, color: Colors.black),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            borderSide:
-                                BorderSide(width: 1, color: Colors.grey),
-                          ),
-                          hintText: "검색어를 입력하세요."),
-                    ),
-                  ),
-                  Container(
-                      width: 60,
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+             Container(margin: EdgeInsets.fromLTRB(0, 65, 0, 0),),
+              Container(
+                //padding: EdgeInsets.fromLTRB(20, 20, 0, 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 290,
                       height: 50,
-                      margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: <Widget>[
-                          ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (BuildContext context) =>
-                                            searchStore("타코")));
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  primary: Colors.black26,
-                                  fixedSize: Size.fromHeight(50)),
-                              child: Icon(
-                                Icons.search,
-                                size: 30.0,
-                              ))
-                        ],
+                      margin: const EdgeInsets.fromLTRB(0, 0, 7, 10),
+                      child: TextField(
+                        decoration: const InputDecoration(
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius:
+                              BorderRadius.all(Radius.circular(10.0)),
+                              borderSide:
+                              BorderSide(width: 1, color: Colors.black),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius:
+                              BorderRadius.all(Radius.circular(10.0)),
+                              borderSide:
+                              BorderSide(width: 1, color: Colors.grey),
+                            ),
+                            hintText: "검색어를 입력하세요."),
+                      ),
+                    ),
+                    Container(
+                        width: 60,
+                        height: 50,
+                        margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: <Widget>[
+                            ElevatedButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (BuildContext context) =>
+                                              searchStore("타코")));
+                                },
+                                style: ElevatedButton.styleFrom(
+                                    primary: Colors.black26,
+                                    fixedSize: Size.fromHeight(50)),
+                                child: Icon(
+                                  Icons.search,
+                                  size: 30.0,
+                                ))
+                          ],
+                        )),
+                  ],
+                ),
+              ),
+              Container(
+                height: 590,
+                child: Container(
+                  child: ClipRect(
+                      child: Transform.scale(
+                        scale: ratio,
+                        child: WebView(
+                          initialUrl: "http://boongsaegwon.kro.kr",
+                          onWebViewCreated: (controller) {
+                            this.controller = controller;
+                          },
+                          javascriptChannels: <JavascriptChannel>{
+                            _markerClicked(context),
+                          },
+                          javascriptMode: JavascriptMode.unrestricted,
+                          onPageFinished: (String url) {
+                            _getNowLocation();
+                          },
+                        ),
                       )),
-                ],
+                ),
               ),
-            ),
-            Container(
-              height: 800,
-              child: SafeArea(
-                child: ClipRect(
-                    child: Transform.scale(
-                  scale: ratio,
-                  child: WebView(
-                    initialUrl: "http://boongsaegwon.kro.kr",
-                    onWebViewCreated: (controller) {
-                      this.controller = controller;
-                    },
-                    javascriptChannels: <JavascriptChannel>{
-                      _markerClicked(context),
-                    },
-                    javascriptMode: JavascriptMode.unrestricted,
-                    onPageFinished: (String url) {
-                      _getNowLocation();
-                    },
-                  ),
-                )),
-              ),
-            ),
-          ],
+            ],
+          ),
+
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(

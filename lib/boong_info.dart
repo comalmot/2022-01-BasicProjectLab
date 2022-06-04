@@ -313,7 +313,7 @@ class infoState extends State<info> {
                         ElevatedButton(
                           onPressed: () async {
                             final returnData = await Navigator.push(context,
-                                MaterialPageRoute(builder: (context) => timeEdit()));
+                                MaterialPageRoute(builder: (context) => timeEdit("")));
                             if (returnData != null) {
                               int i = timeEditState.returnData.length;
                               entries.add(timeEditState.returnData[i - 1]);

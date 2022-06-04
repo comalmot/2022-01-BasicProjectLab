@@ -10,13 +10,18 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: '영업일시 및 장소 수정',
-      home: timeEdit(),
+      home: timeEdit(""),
     );
   }
 }
 
 
 class timeEdit extends StatefulWidget {
+
+  final String data;
+
+  const timeEdit(this.data);
+
   @override
   timeEditState createState() => timeEditState();
 }
@@ -45,6 +50,7 @@ class timeEditState extends State<timeEdit> {
               children: [
                 Text('영업 요일', style: TextStyle(fontSize: 20, fontWeight: FontWeight.normal,),),
                 TextFormField(
+                  controller: TextEditingController(text: widget.data.split(" ")[0]),
                   autovalidateMode: AutovalidateMode.always,
                   decoration: const InputDecoration(
                     hintText: 'ex) 매월 첫째, 셋째주 월, 화요일 ',
@@ -67,6 +73,7 @@ class timeEditState extends State<timeEdit> {
 
                 const Text('영업 시간', style: TextStyle(fontSize: 20, fontWeight: FontWeight.normal,)),
                 TextFormField(
+                  controller: TextEditingController(text: widget.data.split(" ")[1]),
                   autovalidateMode: AutovalidateMode.always,
                   decoration: const InputDecoration(
                     hintText: 'ex) 오후 6시부터 오후 10시까지',
@@ -86,6 +93,7 @@ class timeEditState extends State<timeEdit> {
 
                 const Text('영업 장소', style: TextStyle(fontSize: 20, fontWeight: FontWeight.normal,)),
                 TextFormField(
+                  controller: TextEditingController(text: widget.data.split(" ")[2]),
                   autovalidateMode: AutovalidateMode.always,
                   decoration: const InputDecoration(
                     hintText: 'ex) 대전 궁동 충남대 후문 앞',

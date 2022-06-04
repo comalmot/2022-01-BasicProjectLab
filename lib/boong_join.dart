@@ -135,7 +135,7 @@ class makeProfileState extends State<makeProfile> {
             ),
           ),
           const SizedBox(
-            height: 30.0,
+            //height: 30.0,
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),

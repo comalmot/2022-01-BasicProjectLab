@@ -124,7 +124,7 @@ class boong_mainState extends State<boong_open> {
       body: Column(
         children: <Widget>[
           Container(
-            height: 800,
+            height: 700,
             child: SafeArea(
               child: ClipRect(
                   child: Transform.scale(
@@ -143,7 +143,7 @@ class boong_mainState extends State<boong_open> {
             ),
           ),
           Container(
-            height: 200,
+            height: 50,
             width: 400,
             child: Row(
               children: [
@@ -156,7 +156,7 @@ class boong_mainState extends State<boong_open> {
                         widget.id, _lat, _lng);
                       )
                       */
-                      fetchLocation(widget.id, _lat, _lng);
+                     // fetchLocation(widget.id, _lat, _lng);
                     },
                     style: ButtonStyle(
                         textStyle: MaterialStateProperty.all(

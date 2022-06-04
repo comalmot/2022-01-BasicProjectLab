@@ -176,6 +176,9 @@ class infoEditState extends State<infoEdit> {
   List<Map<String, dynamic>> menus = [];
   List<File> images = <File>[];
   List<String> enc_images = <String>[];
+  String menuDataMove = "";
+  int indexNUmber = 0;
+
   int a = 0;
   // 가게 이름, 가게 설명, 영업 시간, 메뉴명 및 가격에 접근하기 위한 컨트롤러 선언
   TextEditingController _Store_Name_Controller = TextEditingController();
@@ -330,8 +333,9 @@ class infoEditState extends State<infoEdit> {
       }
       return SetStoreInfo.fromJson(json.decode(response.body));
     } else {
+
       final _loginSnackBar = SnackBar(
-        content: Text("가게 정보 입력 실패."),
+        content: Text(SetStoreInfo.fromJson(json.decode(response.body)).error! + " "),
       );
 
       ScaffoldMessenger.of(context).showSnackBar(_loginSnackBar);
@@ -380,6 +384,7 @@ class infoEditState extends State<infoEdit> {
                   onSubmitted: ((value) {
                     //widget.saveState_storeName = _Store_Name_Controller.text;
                   }),
+
                   controller: _Store_Name_Controller,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
@@ -486,12 +491,21 @@ class infoEditState extends State<infoEdit> {
                     shrinkWrap: true,
                     itemCount: controller.storeTime.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return Container(
-                          height: 50,
-                          color: Colors.black26,
-                          child: Center(
-                            child: Text(controller.storeTime[index]),
-                          ));
+                      return GestureDetector(
+                        child: Container(
+                            height: 50,
+                            color: Colors.black26,
+                            child: Center(
+                              child: Text(controller.storeTime[index]),
+                            )),
+                        onTap: () {
+                          menuDataMove = controller.storeTime[index] + " " + index.toString();
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                              builder: (BuildContext context) => timeEdit(menuDataMove)));
+                        },
+                      );
                     },
                     separatorBuilder: (BuildContext context, int index) =>
                         const Divider(),
@@ -499,7 +513,7 @@ class infoEditState extends State<infoEdit> {
                   ElevatedButton(
                     onPressed: () async {
                       final returnData = await Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => timeEdit()));
+                          MaterialPageRoute(builder: (context) => timeEdit("   ")));
 
                       if (returnData != null) {
                         int i = timeEditState.returnData.length;
